@@ -1,0 +1,10 @@
+plugins:
+  - jekyll-relative-links
+relative_links: 
+    enable : true 
+    collections: true
+include: 
+  - index.md
+
+
+
