@@ -1,3 +1,7 @@
+---
+layout: index
+---
+
 # Rupesh Nepal
 *Ranibari, Samakhusi ,Kathmandu*  
 ***(+977) 9840416532***  
