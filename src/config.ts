@@ -1,0 +1,103 @@
+export const config = {
+  profile: {
+    name: "Rupesh Nepal",
+    location: "Ranibari, Samakhusi, Kathmandu",
+    phone: "(+977) 9840416532",
+    email: "contact.rupesh.nepal@gmail.com",
+    github: "https://github.com/rex9840",
+    linkedin: "https://www.linkedin.com/in/rupesh-nepal-62693920b/",
+    bio: "Backend Developer passionate about building scalable web applications with Django & REST APIs. Experienced in cloud deployment, automation, and contributing to open-source communities like GNOME.",
+    skills: [
+      "Python", "Rust", "Go",
+      "Django", "Flask", "FastAPI", "Actix", "Gin",
+      "PostgreSQL", "MySQL", "SQLite",
+      "Docker", "AWS", "Cloudflare", "CI/CD"
+    ]
+  },
+  experience: [
+    {
+      company: "Shangrila Informatics Pvt. Ltd.",
+      role: "Backend developer",
+      period: "2025-present (full-time)",
+      details: [
+        "Developed and maintained scalable REST APIs using Django and Django REST Framework (DRF).",
+        "Refactored legacy Django code to enhance performance and improve code readability.",
+        "Implemented clean architecture and consistent coding standards.",
+        "Implemented data import/export functionalities using pyopenxl and Django Import-Export.",
+        "Utilized pyopenxl to generate Excel reports with advanced patterns.",
+        "Integrated asynchronous background tasks with Celery/Redis.",
+        "Built and managed containerized applications with Docker."
+      ]
+    },
+    {
+      company: "Ascend Crest Technologies",
+      role: "Backend/Django developer",
+      period: "2023-present (part-time)",
+      details: [
+        "Designed and implemented a C2C e-commerce backend system using Django & DRF.",
+        "Integrated asynchronous background tasks with Celery/Redis and WebSockets with Django Channels.",
+        "Implemented Stripe payment gateway integration.",
+        "Streamlined deployment workflows with GitHub Actions CI/CD.",
+        "Managed Docker containerization.",
+        "Deployed on AWS EC2 with Gunicorn/Flower and Cloudflare/R2 for storage."
+      ]
+    },
+    {
+      company: "GNOME Nepal",
+      role: "Open Source Contributor",
+      period: "2023-present",
+      details: [
+        "Major Contributor and Maintainer of the GNOME Nepal Backend System (Django).",
+        "Contributed to 'Djate', a production-ready Django template project."
+      ]
+    }
+  ],
+  projects: [
+    {
+      name: "Git Commit Visualizer",
+      tech: "Go, CLI",
+      description: "CLI tool to visualize git contributions similar to GitHub/GitLab contribution graphs."
+    },
+    {
+      name: "URL Shortener",
+      tech: "Go, Gin",
+      description: "URL shortener service demonstrating modular Go structure and database communication."
+    },
+    {
+      name: "Library Management System",
+      tech: "Django, DRF",
+      description: "REST API replication of a library management system."
+    },
+    {
+      name: "Book Recommendation System",
+      tech: "Python, ML (K-means)",
+      description: "Recommendation engine clustering books based on user ratings."
+    },
+    {
+      name: "Tabular to JSON Converter",
+      tech: "Rust",
+      description: "Web scraping tool to convert tabular data to structured JSON."
+    },
+    {
+      name: "Rust Web App",
+      tech: "Rust, Actix",
+      description: "Web application leveraging Rust's adaptability."
+    },
+    {
+      name: "Recursive CFG Parser",
+      tech: "Rust",
+      description: "Compiler logic to parse context-free grammars."
+    }
+  ],
+  readme: `Welcome to the portfolio file system!
+Use standard shell commands to navigate:
+- cd <dir>: Change directory
+- ls: List contents
+- cat <file>: Read file
+- clear: Clear screen`,
+  customFiles: {
+    // Add any extra files you want here
+    "contribution.txt": "Always open for collaborations! Contact me via email.",
+  },
+  initialCommand: "banner"
+};
