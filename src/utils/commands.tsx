@@ -69,7 +69,8 @@ export const processCommand = (
   pwd         - Print working directory
   home        - Go to home directory
   banner      - Show welcome banner
-  help        - Show this message`
+  help        - Show this message
+  whoami        - Show user identity` 
             };
 
         case 'pwd':
