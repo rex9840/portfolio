@@ -2,7 +2,6 @@ export const config = {
   profile: {
     name: "Rupesh Nepal",
     location: "Ranibari, Samakhusi, Kathmandu",
-    phone: "(+977) 9840416532",
     email: "contact.rupesh.nepal@gmail.com",
     github: "https://github.com/rex9840",
     linkedin: "https://www.linkedin.com/in/rupesh-nepal-62693920b/",

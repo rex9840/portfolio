@@ -61,7 +61,7 @@ const generateFileSystem = (): Directory => {
                             },
                             'contact.txt': {
                                 type: 'file',
-                                content: `Email: ${config.profile.email}\nPhone: ${config.profile.phone}\nGitHub: ${config.profile.github}\nLinkedIn: ${config.profile.linkedin}`
+                                content: `Email: ${config.profile.email}\nGitHub: ${config.profile.github}\nLinkedIn: ${config.profile.linkedin}`
                             },
                             'projects': {
                                 type: 'dir',
