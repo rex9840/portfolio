@@ -1,0 +1,5 @@
+baseURL = "https://rex9840.github.io/portfolio/"
+title   = "Rupesh Nepal | Terminal Portfolio"
+
+disableKinds = ["taxonomy", "term"]
+enableRobotsTXT = true

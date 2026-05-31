@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Redirecting...</title>
+  <script>
+    // Preserve any deep path after the repo name so bookmarks still work
+    const base = '/portfolio/';
+    const path = window.location.pathname;
+    const after = path.startsWith(base) ? path.slice(base.length) : '';
+    window.location.replace(base + after + window.location.search + window.location.hash);
+  </script>
+  <noscript>
+    <meta http-equiv="refresh" content="0; url=/portfolio/" />
+  </noscript>
+  <style>
+    body { background:#0d1117; color:#00ff41; font-family:monospace; display:flex;
+           align-items:center; justify-content:center; height:100vh; margin:0; }
+  </style>
+</head>
+<body>
+  <span>redirecting to /portfolio/...</span>
+</body>
+</html>

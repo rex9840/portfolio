@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ── Primary SEO ── -->
+  <title>{{ .Site.Data.portfolio.profile.name }} | Backend Developer</title>
+  <meta name="description" content="{{ .Site.Data.portfolio.profile.bio }}" />
+  <meta name="author" content="{{ .Site.Data.portfolio.profile.name }}" />
+  <link rel="canonical" href="{{ .Site.BaseURL }}" />
+
+  <!-- ── Block AI training (meta-level) ── -->
+  <meta name="robots" content="index, follow, noai, noimageai" />
+
+  <!-- ── OpenGraph (LinkedIn, Slack, Discord, etc.) ── -->
+  <meta property="og:type"        content="profile" />
+  <meta property="og:title"       content="{{ .Site.Data.portfolio.profile.name }} | Backend Developer" />
+  <meta property="og:description" content="{{ .Site.Data.portfolio.profile.bio }}" />
+  <meta property="og:url"         content="{{ .Site.BaseURL }}" />
+  <meta property="og:image"       content="{{ "rex9840.png" | absURL }}" />
+  <meta property="profile:first_name" content="Rupesh" />
+  <meta property="profile:last_name"  content="Nepal" />
+
+  <!-- ── Twitter / X Card ── -->
+  <meta name="twitter:card"        content="summary" />
+  <meta name="twitter:title"       content="{{ .Site.Data.portfolio.profile.name }} | Backend Developer" />
+  <meta name="twitter:description" content="{{ .Site.Data.portfolio.profile.bio }}" />
+  <meta name="twitter:image"       content="{{ "rex9840.png" | absURL }}" />
+
+  <!-- ── JSON-LD: Person schema (Google rich results) ── -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "{{ .Site.Data.portfolio.profile.name }}",
+    "url": "{{ .Site.BaseURL }}",
+    "email": "{{ .Site.Data.portfolio.profile.email }}",
+    "image": "{{ "rex9840.png" | absURL }}",
+    "jobTitle": "Backend Developer",
+    "description": "{{ .Site.Data.portfolio.profile.bio }}",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Kathmandu",
+      "addressCountry": "NP"
+    },
+    "sameAs": [
+      "{{ .Site.Data.portfolio.profile.github }}",
+      "{{ .Site.Data.portfolio.profile.linkedin }}"
+    ],
+    "knowsAbout": {{ .Site.Data.portfolio.profile.skills | jsonify }}
+  }
+  </script>
+
+  <link rel="icon" type="image/png" href="{{ "rex9840.png" | relURL }}" />
+  <link rel="stylesheet" href="{{ "css/style.css" | relURL }}" />
+  <script>window.PORTFOLIO_DATA = JSON.parse({{ .Site.Data.portfolio | jsonify }});</script>
+</head>
+<body>
+  <div class="scanline"></div>
+  <div id="sidebar-backdrop"></div>
+
+  <div id="app">
+    <!-- Sidebar -->
+    <aside id="sidebar">
+      <div id="file-tree"></div>
+      <div id="resize-handle"></div>
+    </aside>
+
+    <!-- Main -->
+    <main id="main">
+      <!-- Top bar -->
+      <div id="topbar">
+        <button id="menu-btn" aria-label="Toggle sidebar">&#9776;</button>
+        <span id="topbar-path">~</span>
+        <span id="topbar-clock"></span>
+      </div>
+
+      <!-- Terminal output -->
+      <div id="terminal-scroll">
+        <div id="history"></div>
+      </div>
+
+      <!-- Input area -->
+      <div id="input-area">
+        <div id="input-line">
+          <span id="prompt-current" class="prompt"></span>
+          <div id="input-wrapper">
+            <span id="display-input"></span>
+            <span id="ghost-text"></span>
+            <span class="terminal-cursor"></span>
+            <input
+              id="cmd-input"
+              type="text"
+              spellcheck="false"
+              autocomplete="off"
+              autocapitalize="off"
+              autocorrect="off"
+              autofocus
+            />
+          </div>
+        </div>
+
+        <!-- Quick commands -->
+        <div id="quick-cmds">
+          <button class="qcmd" data-cmd="help">help</button>
+          <button class="qcmd" data-cmd="ls">ls</button>
+          <button class="qcmd" data-cmd="whoami">whoami</button>
+          <button class="qcmd" data-cmd="skills">skills</button>
+          <button class="qcmd" data-cmd="projects">projects</button>
+          <button class="qcmd" data-cmd="experience">experience</button>
+          <button class="qcmd" data-cmd="contact">contact</button>
+          <button class="qcmd" data-cmd="theme list">theme</button>
+          <button class="qcmd" data-cmd="clear">clear</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="{{ "js/terminal.js" | relURL }}"></script>
+</body>
+</html>
