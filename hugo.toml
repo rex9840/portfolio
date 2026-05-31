@@ -3,6 +3,7 @@ title   = "Rupesh Nepal | Terminal Portfolio"
 
 disableKinds = ["taxonomy", "term"]
 enableRobotsTXT = true
+disableHugoGeneratorInject = true
 
 [mediaTypes]
   [mediaTypes."text/markdown"]

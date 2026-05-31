@@ -273,7 +273,7 @@ const THEMES = {
 };
 
 const THEME_NAMES = Object.keys(THEMES);
-let activeTheme = localStorage.getItem('portfolio-theme') || 'matrix';
+let activeTheme = localStorage.getItem('portfolio-theme') || 'amber';
 
 function applyTheme(name) {
   const theme = THEMES[name];
@@ -616,6 +616,14 @@ Tips: Tab/→ autocomplete · ↑/↓ history`
 
         entry.appendChild(header);
         entry.appendChild(period);
+
+        if (e.highlight) {
+          const hl = document.createElement('div');
+          hl.className = 'exp-highlight';
+          hl.textContent = '★ ' + e.highlight;
+          entry.appendChild(hl);
+        }
+
         e.details.forEach(d => {
           const detail = document.createElement('div');
           detail.className = 'exp-detail';
@@ -1536,6 +1544,30 @@ function toggleSidebar() {
   sidebarOpen ? closeSidebar() : openSidebar();
 }
 
+function switchView(target) {
+  const isStandard = target === 'standard';
+  const app = document.getElementById('app');
+  const sv  = document.getElementById('standard-view');
+  const btns = document.querySelectorAll('.vsw-btn');
+
+  if (isStandard) {
+    app.style.display = 'none';
+    sv.removeAttribute('hidden');
+    document.body.classList.add('sv-active');
+  } else {
+    app.style.display = '';
+    sv.setAttribute('hidden', '');
+    document.body.classList.remove('sv-active');
+    focusInput();
+  }
+  btns.forEach(b => {
+    const active = b.dataset.target === target;
+    b.classList.toggle('active', active);
+    b.setAttribute('aria-pressed', String(active));
+  });
+  localStorage.setItem('portfolio-view', target);
+}
+
 /* ══════════════════════════════════════
    NEOVIM ENGINE
 ══════════════════════════════════════ */
@@ -2060,6 +2092,38 @@ function init() {
     const item = e.target.closest('[data-cmd]');
     if (item) { executeCmd(item.dataset.cmd); focusInput(); }
   });
+
+  // View switcher
+  document.getElementById('view-switcher').addEventListener('click', e => {
+    const btn = e.target.closest('.vsw-btn');
+    if (btn) switchView(btn.dataset.target);
+  });
+
+  // Welcome modal — show on first visit (no saved view preference)
+  const savedView = localStorage.getItem('portfolio-view');
+  if (!savedView) {
+    const modal = document.getElementById('welcome-modal');
+    modal.removeAttribute('hidden');
+
+    function pickView(target) {
+      modal.setAttribute('hidden', '');
+      switchView(target);
+    }
+
+    document.getElementById('wm-terminal').addEventListener('click', () => pickView('terminal'));
+    document.getElementById('wm-card').addEventListener('click',     () => pickView('standard'));
+
+    modal.addEventListener('keydown', e => {
+      if (e.key === '1') pickView('terminal');
+      if (e.key === '2') pickView('standard');
+      if (e.key === 'Escape') pickView('terminal');
+    });
+
+    // Auto-focus modal so keyboard shortcut works immediately
+    setTimeout(() => document.getElementById('wm-terminal').focus(), 50);
+  } else if (savedView === 'standard') {
+    switchView('standard');
+  }
 
   // Mobile: hamburger
   document.getElementById('menu-btn').addEventListener('click', toggleSidebar);

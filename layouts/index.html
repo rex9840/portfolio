@@ -6,7 +6,7 @@
 
   <!-- ── Primary SEO ── -->
   <title>{{ .Site.Data.portfolio.profile.name }} | Backend Developer</title>
-  <meta name="description" content="{{ .Site.Data.portfolio.profile.bio }}" />
+  <meta name="description" content="{{ .Site.Data.portfolio.profile.seoDescription | default .Site.Data.portfolio.profile.bio }}" />
   <meta name="author" content="{{ .Site.Data.portfolio.profile.name }}" />
   <link rel="canonical" href="{{ .Site.BaseURL }}" />
 
@@ -16,17 +16,19 @@
   <!-- ── OpenGraph (LinkedIn, Slack, Discord, etc.) ── -->
   <meta property="og:type"        content="profile" />
   <meta property="og:title"       content="{{ .Site.Data.portfolio.profile.name }} | Backend Developer" />
-  <meta property="og:description" content="{{ .Site.Data.portfolio.profile.bio }}" />
+  <meta property="og:description" content="{{ .Site.Data.portfolio.profile.seoDescription | default .Site.Data.portfolio.profile.bio }}" />
   <meta property="og:url"         content="{{ .Site.BaseURL }}" />
-  <meta property="og:image"       content="{{ "rex9840.png" | absURL }}" />
+  <meta property="og:image"       content="{{ "og-image.webp" | absURL }}" />
+  <meta property="og:image:width"  content="1200" />
+  <meta property="og:image:height" content="630" />
   <meta property="profile:first_name" content="Rupesh" />
   <meta property="profile:last_name"  content="Nepal" />
 
   <!-- ── Twitter / X Card ── -->
-  <meta name="twitter:card"        content="summary" />
+  <meta name="twitter:card"        content="summary_large_image" />
   <meta name="twitter:title"       content="{{ .Site.Data.portfolio.profile.name }} | Backend Developer" />
-  <meta name="twitter:description" content="{{ .Site.Data.portfolio.profile.bio }}" />
-  <meta name="twitter:image"       content="{{ "rex9840.png" | absURL }}" />
+  <meta name="twitter:description" content="{{ .Site.Data.portfolio.profile.seoDescription | default .Site.Data.portfolio.profile.bio }}" />
+  <meta name="twitter:image"       content="{{ "og-image.webp" | absURL }}" />
 
   <!-- ── JSON-LD: Person schema (Google rich results) ── -->
   <script type="application/ld+json">
@@ -46,13 +48,86 @@
   }
   </script>
 
-  <link rel="icon" type="image/png" href="{{ "rex9840.png" | relURL }}" />
+  <link rel="icon" type="image/webp" href="{{ "rex9840.webp" | relURL }}" />
+  <link rel="icon" type="image/png"  href="{{ "rex9840.png"  | relURL }}" />
   <link rel="stylesheet" href="{{ "css/style.css" | relURL }}" />
   <script>window.PORTFOLIO_DATA = JSON.parse({{ .Site.Data.portfolio | jsonify }});</script>
 </head>
 <body>
+  <a href="#terminal-scroll" class="skip-link">Skip to terminal</a>
   <div class="scanline"></div>
   <div id="sidebar-backdrop"></div>
+
+  <!-- Always-visible view switcher -->
+  <div id="view-switcher" role="group" aria-label="Switch view">
+    <button class="vsw-btn active" data-target="terminal" aria-pressed="true">⌨ Terminal</button>
+    <button class="vsw-btn" data-target="standard" aria-pressed="false">📄 Standard</button>
+  </div>
+
+  <!-- Standard CV view (Hugo-rendered, hidden by default) -->
+  <div id="standard-view" hidden>
+    <div class="sv-wrap">
+
+      <header class="sv-hero">
+        <img src="{{ "rex9840.webp" | relURL }}" alt="{{ .Site.Data.portfolio.profile.name }}" class="sv-avatar" width="96" height="96" />
+        <div class="sv-hero-text">
+          <h1>{{ .Site.Data.portfolio.profile.name }}</h1>
+          <p class="sv-role">Backend Developer &middot; {{ .Site.Data.portfolio.profile.location }}</p>
+          <p class="sv-bio">{{ .Site.Data.portfolio.profile.bio }}</p>
+          <div class="sv-links">
+            <a href="{{ .Site.Data.portfolio.profile.github }}"   target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+            <a href="{{ .Site.Data.portfolio.profile.linkedin }}" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+            <a href="mailto:{{ .Site.Data.portfolio.profile.email }}">{{ .Site.Data.portfolio.profile.email }}</a>
+          </div>
+        </div>
+      </header>
+
+      <section class="sv-section">
+        <h2>Skills</h2>
+        <div class="sv-badges">
+          {{ range .Site.Data.portfolio.profile.skills }}<span class="sv-badge">{{ . }}</span>{{ end }}
+        </div>
+      </section>
+
+      <section class="sv-section">
+        <h2>Experience</h2>
+        {{ range .Site.Data.portfolio.experience }}
+        <div class="sv-card">
+          <div class="sv-card-head">
+            <span class="sv-card-title">{{ .role }}</span>
+            <span class="sv-card-sub">{{ .company }}</span>
+            <span class="sv-card-period">{{ .period }}</span>
+          </div>
+          {{ with .highlight }}<p class="sv-card-highlight">★ {{ . }}</p>{{ end }}
+          <ul class="sv-card-list">
+            {{ range .details }}<li>{{ . }}</li>{{ end }}
+          </ul>
+        </div>
+        {{ end }}
+      </section>
+
+      <section class="sv-section">
+        <h2>Projects</h2>
+        <div class="sv-grid">
+          {{ range .Site.Data.portfolio.projects }}
+          <div class="sv-card sv-project">
+            <div class="sv-card-head">
+              <span class="sv-card-title">{{ .name }}</span>
+              <code class="sv-card-tech">{{ .tech }}</code>
+            </div>
+            <p class="sv-card-desc">{{ .description }}</p>
+            {{ with .github }}<a href="{{ . }}" class="sv-card-link" target="_blank" rel="noopener noreferrer">View on GitHub ↗</a>{{ end }}
+          </div>
+          {{ end }}
+        </div>
+      </section>
+
+      <footer class="sv-footer">
+        <a href="mailto:{{ .Site.Data.portfolio.profile.email }}" class="sv-cta">Get in touch →</a>
+      </footer>
+
+    </div>
+  </div>
 
   <div id="app">
     <!-- Sidebar -->
@@ -79,7 +154,7 @@
 
       <!-- Terminal output -->
       <div id="terminal-scroll">
-        <div id="history"></div>
+        <div id="history" role="log" aria-live="polite" aria-atomic="false"></div>
       </div>
 
       <!-- Input area -->
@@ -92,9 +167,11 @@
             <span id="display-input"></span>
             <span id="ghost-text"></span>
             <span class="terminal-cursor"></span>
+            <label for="cmd-input" class="sr-only">Terminal command input</label>
             <input
               id="cmd-input"
               type="text"
+              aria-label="Enter a terminal command"
               spellcheck="false"
               autocomplete="off"
               autocapitalize="off"
@@ -121,6 +198,37 @@
         </div>
       </div>
     </main>
+  </div>
+
+  <!-- Welcome modal (first visit only) -->
+  <div id="welcome-modal" hidden role="dialog" aria-modal="true" aria-labelledby="welcome-title">
+    <div id="welcome-box">
+      <div class="wm-bar">
+        <span class="wm-dot"></span><span class="wm-dot"></span><span class="wm-dot"></span>
+        <span class="wm-title">rupesh@portfolio — bash</span>
+      </div>
+      <div class="wm-body">
+        <p class="wm-prompt"><span class="wm-ps">root@portfolio:~$</span> whoami</p>
+        <p class="wm-out">Rupesh Nepal — Backend Developer</p>
+        <p class="wm-prompt wm-mt"><span class="wm-ps">root@portfolio:~$</span> select --view</p>
+        <p class="wm-out">How would you like to explore this portfolio?</p>
+        <div class="wm-choices">
+          <button class="wm-btn" id="wm-terminal">
+            <span class="wm-btn-key">[1]</span>
+            <span class="wm-btn-icon">⌨</span>
+            <span class="wm-btn-label">Terminal</span>
+            <span class="wm-btn-desc">Full CLI experience</span>
+          </button>
+          <button class="wm-btn" id="wm-card">
+            <span class="wm-btn-key">[2]</span>
+            <span class="wm-btn-icon">📄</span>
+            <span class="wm-btn-label">Card View</span>
+            <span class="wm-btn-desc">Clean CV layout</span>
+          </button>
+        </div>
+        <p class="wm-hint">Press <kbd>1</kbd> or <kbd>2</kbd> — you can always switch later</p>
+      </div>
+    </div>
   </div>
 
   <!-- Neovim overlay -->

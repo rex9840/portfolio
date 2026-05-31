@@ -3,19 +3,51 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Redirecting...</title>
+  <title>404 — Not Found</title>
   <script>
-    window.location.replace('/' + window.location.search + window.location.hash);
+    // GitHub Pages SPA fallback — redirect back to root with path in query
+    const path = window.location.pathname;
+    if (path !== '/') {
+      window.location.replace('/?p=' + encodeURIComponent(path));
+    }
   </script>
-  <noscript>
-    <meta http-equiv="refresh" content="0; url=/" />
-  </noscript>
   <style>
-    body { background:#0d1117; color:#3fb950; font-family:monospace; display:flex;
-           align-items:center; justify-content:center; height:100vh; margin:0; }
+    :root { --green: #3fb950; --bg: #0d1117; --gray-4: #8b949e; --gray-6: #484f58; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg); color: var(--green);
+      font-family: 'Courier New', Courier, monospace;
+      display: flex; align-items: center; justify-content: center;
+      height: 100dvh; padding: 24px;
+    }
+    .wrap { max-width: 480px; width: 100%; }
+    .prompt { color: var(--green); }
+    .cmd    { color: #fff; }
+    .err    { color: #f85149; margin: 8px 0 20px; }
+    .hint   { color: var(--gray-4); font-size: 13px; margin-bottom: 24px; }
+    a {
+      display: inline-block; margin-top: 8px;
+      color: var(--green); text-decoration: none;
+      border: 1px solid var(--green); padding: 6px 16px;
+      border-radius: 3px; font-size: 13px;
+      transition: background 0.15s;
+    }
+    a:hover { background: rgba(63,185,80,0.1); }
+    .blink { animation: blink 1s step-end infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
   </style>
 </head>
 <body>
-  <span>redirecting...</span>
+  <div class="wrap">
+    <div><span class="prompt">root@portfolio:~$</span> <span class="cmd">cd <span id="path"></span></span></div>
+    <div class="err">bash: <span id="path2"></span>: No such file or directory</div>
+    <div class="hint">The path you followed doesn't exist. Redirecting you home…<span class="blink">▋</span></div>
+    <a href="/">← cd ~</a>
+  </div>
+  <script>
+    const p = window.location.pathname;
+    document.getElementById('path').textContent = p;
+    document.getElementById('path2').textContent = p;
+  </script>
 </body>
 </html>

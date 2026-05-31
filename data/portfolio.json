@@ -6,6 +6,7 @@
     "github": "https://github.com/rex9840",
     "linkedin": "https://www.linkedin.com/in/rupesh-nepal-62693920b/",
     "bio": "Backend developer working across Python, Rust, and Go. Currently at Hyteno Tech maintaining backend systems for Morgenland Teppiche — keeping product data consistent across their webshop and marketplace integrations. Previously built REST APIs and async systems at Shangrila Informatics and Ascend Crest Technologies. GNOME Nepal open source contributor.",
+    "seoDescription": "Backend developer specialising in Python, Rust & Go. Building scalable APIs, async systems, and open-source tools. GNOME Nepal contributor.",
     "skills": [
       "Python", "Rust", "Go",
       "Django", "Flask", "FastAPI", "Actix", "Gin",
@@ -18,6 +19,7 @@
       "company": "Hyteno Tech (Client: Morgenland Teppiche)",
       "role": "Backend Developer",
       "period": "2025-present",
+      "highlight": "Unified product data across 4+ marketplaces and leading ERP migration from Plentymarkets to Odoo.",
       "details": [
         "Built a Shopify → central database sync pipeline, consolidating product and inventory data across eBay, Amazon, ManoMano, and Home24 into a single source of truth.",
         "Implemented monthly dynamic pricing strategy across webshop channels to optimise sales performance and margins.",
@@ -31,6 +33,7 @@
       "company": "Shangrila Informatics Pvt. Ltd.",
       "role": "Backend developer",
       "period": "2025 (full-time)",
+      "highlight": "Refactored legacy Django codebase and shipped async task pipelines with Celery/Redis.",
       "details": [
         "Developed and maintained scalable REST APIs using Django and Django REST Framework (DRF).",
         "Refactored legacy Django code to enhance performance and improve code readability.",
@@ -45,6 +48,7 @@
       "company": "Ascend Crest Technologies",
       "role": "Backend/Django developer",
       "period": "2023-present (part-time)",
+      "highlight": "Built BetzBazar — C2C beats marketplace with SOX audio watermarking, Stripe payments, and real-time WebSockets.",
       "details": [
         "Built the backend for BetzBazar, a C2C music beats marketplace, using Django and Django REST Framework.",
         "Implemented SOX-based audio watermarking — overlaying beat samples with an inaudible background sound on preview playback, making raw samples un-pirateable before purchase.",
@@ -58,9 +62,12 @@
       "company": "GNOME Nepal",
       "role": "Open Source Contributor",
       "period": "2023-present",
+      "highlight": "Maintainer of GNOME Nepal's Django backend and contributor to Djate, a production-ready Django template.",
       "details": [
         "Major Contributor and Maintainer of the GNOME Nepal Backend System (Django).",
-        "Contributed to 'Djate', a production-ready Django template project."
+        "Contributed to 'Djate', a production-ready Django project template used by the community.",
+        "Collaborated with open source contributors across Nepal to build and maintain community infrastructure.",
+        "Reviewed pull requests, triaged issues, and mentored new contributors to the Django ecosystem."
       ]
     }
   ],
