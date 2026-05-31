@@ -110,7 +110,7 @@ function getCompletions(currentPath, partial) {
 function getContextCompletions(cmd, path, partial) {
   const c = cmd.toLowerCase();
   if (c === 'theme') return THEME_NAMES.filter(n => n.startsWith(partial.toLowerCase()));
-  if (c === 'open')  return ['github', 'linkedin'].filter(n => n.startsWith(partial.toLowerCase()));
+  if (c === 'open')  return ['github', 'linkedin', 'blog'].filter(n => n.startsWith(partial.toLowerCase()));
   const node = getNodeAtPath(path);
   if (!node || node.type !== 'dir') return [];
   const entries = Object.entries(node.children);
@@ -130,11 +130,12 @@ const COMMANDS = [
   'banner', 'whoami', 'neofetch', 'contact', 'skills', 'projects', 'experience',
   'theme', 'open', 'nvim', 'vim', 'vi',
   'grep', 'echo', 'touch', 'rm', 'history', 'resume',
+  'now', 'blog',
 ];
 
 const ARG_HINTS = {
   theme:    'matrix|amber|nord|dracula',
-  open:     'github|linkedin',
+  open:     'github|linkedin|blog',
   cd:       '<directory>',
   cat:      '<file>',
   nvim:     '<file>',
@@ -356,13 +357,15 @@ function processCommand(cmd, currentPath) {
       return {
         type: 'text',
         content: `Available commands:
-  resume         Generate and download resume as Markdown
   whoami         Profile card
   neofetch       System-style profile overview
   skills         Skill badges
   projects       Projects with GitHub links
   experience     Work history
   contact        Contact info (clickable + copy)
+  now            What I'm currently working on
+  blog           Writing & articles
+  resume         Download resume as Markdown
   ls / cd / cat  Navigate the filesystem
   nvim <file>    Open file  (i insert · Esc normal · / search · :wq save+quit)
   grep <pat> <f> Search pattern in file
@@ -370,7 +373,7 @@ function processCommand(cmd, currentPath) {
   rm <file>      Delete file (session)
   echo <text>    Print text
   history        Show command history
-  open <url>     Open URL  (open github · open linkedin)
+  open <url>     Open URL  (open github · open linkedin · open blog)
   theme <name>   Switch theme  (matrix · amber · nord · dracula)
   clear          Clear terminal
   help           Show this message
@@ -406,13 +409,14 @@ Tips: Tab/→ autocomplete · ↑/↓ history`
       [
         { label: 'GitHub',   href: config.profile.github },
         { label: 'LinkedIn', href: config.profile.linkedin },
-      ].forEach(({ label, href }) => {
+        { label: '⬇ Resume', href: 'resume.md', download: true },
+      ].forEach(({ label, href, download }) => {
         const a = document.createElement('a');
         a.href = href;
-        a.target = '_blank';
-        a.rel = 'noopener noreferrer';
+        if (download) { a.download = config.profile.name.replace(/\s+/g,'_') + '_Resume.md'; }
+        else { a.target = '_blank'; a.rel = 'noopener noreferrer'; }
         a.className = 'whoami-link';
-        a.textContent = '↗ ' + label;
+        a.textContent = (download ? '' : '↗ ') + label;
         links.appendChild(a);
       });
 
@@ -678,7 +682,33 @@ Tips: Tab/→ autocomplete · ↑/↓ history`
       const { node: catNode } = resolvePath(currentPath, args[0]);
       if (!catNode) return { type: 'error', content: `cat: ${args[0]}: No such file or directory` };
       if (catNode.type === 'dir') return { type: 'error', content: `cat: ${args[0]}: Is a directory` };
-      return { type: 'text', content: catNode.content };
+
+      // Linkify emails and URLs in file content
+      const emailRe = /([a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,})/g;
+      const urlRe   = /https?:\/\/[^\s]+/g;
+      const text    = catNode.content;
+      if (!emailRe.test(text) && !urlRe.test(text)) {
+        return { type: 'text', content: text };
+      }
+      // Build DOM with clickable links
+      const pre = document.createElement('pre');
+      pre.style.cssText = 'white-space:pre-wrap;word-break:break-word;font-size:13px;line-height:1.7';
+      const combined = new RegExp(`(${emailRe.source}|${urlRe.source})`, 'g');
+      let last = 0, m;
+      combined.lastIndex = 0;
+      while ((m = combined.exec(text)) !== null) {
+        if (m.index > last) pre.appendChild(document.createTextNode(text.slice(last, m.index)));
+        const a = document.createElement('a');
+        const val = m[0];
+        a.href = val.includes('@') ? 'mailto:' + val : val;
+        if (!val.includes('@')) { a.target = '_blank'; a.rel = 'noopener noreferrer'; }
+        a.style.cssText = 'color:var(--blue-4);text-decoration:underline';
+        a.textContent = val;
+        pre.appendChild(a);
+        last = m.index + val.length;
+      }
+      if (last < text.length) pre.appendChild(document.createTextNode(text.slice(last)));
+      return { type: 'node', node: pre };
     }
 
     case 'theme': {
@@ -745,6 +775,7 @@ Tips: Tab/→ autocomplete · ↑/↓ history`
       let url = args[0];
       if (url === 'github')   url = config.profile.github;
       if (url === 'linkedin') url = config.profile.linkedin;
+      if (url === 'blog')     url = config.profile.github + '?tab=repositories';
       if (!url.startsWith('http')) url = 'https://' + url;
       window.open(url, '_blank', 'noopener,noreferrer');
       return { type: 'text', content: `Opening ${url} ...` };
@@ -889,6 +920,92 @@ Tips: Tab/→ autocomplete · ↑/↓ history`
       delete rmDir.children[args[0]];
       renderFileTree();
       return { type: 'text', content: '' };
+    }
+
+    case 'now': {
+      const n = config.now;
+      if (!n) return { type: 'error', content: 'now: no data configured' };
+      const wrap = document.createElement('div');
+      wrap.className = 'section-list';
+      const title = document.createElement('div');
+      title.style.cssText = 'color:var(--green);font-weight:bold;margin-bottom:10px';
+      title.textContent = 'what rupesh is doing now';
+      wrap.appendChild(title);
+      const rows = [
+        ['building',     n.building],
+        ['learning',     n.learning],
+        ['contributing', n.contributing],
+        ['reading',      n.reading],
+      ];
+      rows.forEach(([key, val]) => {
+        const row = document.createElement('div');
+        row.style.cssText = 'display:flex;gap:8px;font-size:13px;margin-bottom:4px';
+        const k = document.createElement('span');
+        k.style.cssText = 'color:var(--gray-4);min-width:120px;flex-shrink:0';
+        k.textContent = key;
+        const v = document.createElement('span');
+        v.style.color = 'var(--gray-3)';
+        v.textContent = val;
+        row.appendChild(k); row.appendChild(v);
+        wrap.appendChild(row);
+      });
+      const updated = document.createElement('div');
+      updated.style.cssText = 'color:var(--gray-6);font-size:11px;margin-top:10px';
+      updated.textContent = 'last updated: ' + n.updated;
+      wrap.appendChild(updated);
+      return { type: 'node', node: wrap };
+    }
+
+    case 'blog': {
+      const wrap = document.createElement('div');
+
+      const art = document.createElement('pre');
+      art.className = 'banner-pre';
+      art.style.cssText = 'color:var(--green);font-size:11px;line-height:1.3;margin-bottom:14px';
+      art.textContent = [
+        '██████╗ ██╗      ██████╗  ██████╗ ',
+        '██╔══██╗██║     ██╔═══██╗██╔════╝ ',
+        '██████╔╝██║     ██║   ██║██║  ███╗',
+        '██╔══██╗██║     ██║   ██║██║   ██║',
+        '██████╔╝███████╗╚██████╔╝╚██████╔╝',
+        '╚═════╝ ╚══════╝ ╚═════╝  ╚═════╝ ',
+      ].join('\n');
+      wrap.appendChild(art);
+
+      const box = document.createElement('pre');
+      box.style.cssText = 'font-size:12px;line-height:1.6;color:var(--gray-4)';
+      box.textContent = [
+        '┌──────────────────────────────────────────────────┐',
+        '│                                                  │',
+        '│   ⚙  site under construction  ⚙                 │',
+        '│                                                  │',
+        '│   posts are being compiled...                    │',
+        '│   ████████████████░░░░░░░░░░  60%                │',
+        '│                                                  │',
+        '│   queued topics:                                 │',
+        '│   › Concurrency in Python: working with          │',
+        '│     the GIL, not against it                      │',
+        '│   › Django ORM vs raw Python: knowing when       │',
+        '│     the ORM becomes the bottleneck               │',
+        '│   › Merchandising at scale: lessons and          │',
+        '│     pitfalls nobody warns you about              │',
+        '│   › SOX audio watermarking in Python             │',
+        '│                                                  │',
+        '└──────────────────────────────────────────────────┘',
+      ].join('\n');
+      wrap.appendChild(box);
+
+      const link = document.createElement('div');
+      link.style.marginTop = '10px';
+      const a = document.createElement('a');
+      a.href = config.profile.github;
+      a.target = '_blank'; a.rel = 'noopener noreferrer';
+      a.style.cssText = 'color:var(--blue-4);font-size:12px';
+      a.textContent = '↗ follow on GitHub for updates';
+      link.appendChild(a);
+      wrap.appendChild(link);
+
+      return { type: 'node', node: wrap };
     }
 
     default: {
@@ -1548,8 +1665,6 @@ function switchView(target) {
   const isStandard = target === 'standard';
   const app = document.getElementById('app');
   const sv  = document.getElementById('standard-view');
-  const btns = document.querySelectorAll('.vsw-btn');
-
   if (isStandard) {
     app.style.display = 'none';
     sv.removeAttribute('hidden');
@@ -1560,12 +1675,14 @@ function switchView(target) {
     document.body.classList.remove('sv-active');
     focusInput();
   }
-  btns.forEach(b => {
+  document.querySelectorAll('.vsw-btn').forEach(b => {
     const active = b.dataset.target === target;
     b.classList.toggle('active', active);
     b.setAttribute('aria-pressed', String(active));
   });
   localStorage.setItem('portfolio-view', target);
+  const announcer = document.getElementById('sr-announcer');
+  if (announcer) announcer.textContent = isStandard ? 'Switched to card view' : 'Switched to terminal view';
 }
 
 /* ══════════════════════════════════════
@@ -2093,8 +2210,8 @@ function init() {
     if (item) { executeCmd(item.dataset.cmd); focusInput(); }
   });
 
-  // View switcher
-  document.getElementById('view-switcher').addEventListener('click', e => {
+  // View switcher (topbar + standard view nav)
+  document.addEventListener('click', e => {
     const btn = e.target.closest('.vsw-btn');
     if (btn) switchView(btn.dataset.target);
   });

@@ -2,10 +2,10 @@
 
 ## Overview
 
-Static Hugo site. No Node.js at runtime. Vanilla JS + CSS. Terminal-style UI with a fake filesystem, commands, themes, and a sidebar file explorer.
+Static Hugo site. Vanilla JS + CSS. Terminal-style UI with a fake filesystem, commands, themes, sidebar explorer, and a standard card view.
 
-**Build:** Hugo binary only (~12ms). Deployed to GitHub Pages via `peaceiris/actions-hugo@v3`.  
-**Live:** `rupeshnepal.com.np`
+**Build:** Hugo binary only (~18ms). Deployed to GitHub Pages via `peaceiris/actions-hugo@v3`.  
+**Live:** `rupeshnepal.com.np` (Cloudflare proxy → GitHub Pages)
 
 ---
 
@@ -14,63 +14,85 @@ Static Hugo site. No Node.js at runtime. Vanilla JS + CSS. Terminal-style UI wit
 ```
 portfolio/
 ├── data/
-│   └── portfolio.json        ← ALL content lives here (edit this to update info)
+│   └── portfolio.json        ← ALL content (profile, experience, projects, now, customFiles)
 ├── layouts/
-│   └── index.html            ← Single HTML shell; Hugo injects PORTFOLIO_DATA
+│   ├── index.html            ← Main HTML shell; Hugo injects PORTFOLIO_DATA
+│   ├── 404.html              ← Terminal-themed 404 with ASCII art (Hugo template)
+│   └── index.resume.md       ← Hugo template that generates /resume.md at build time
 ├── static/
-│   ├── css/style.css         ← All styles (vars, layout, components)
-│   └── js/terminal.js        ← All JS (~1900 lines, vanilla)
-├── public/
-│   └── resume.md             ← Static resume file (download target)
-├── hugo.toml                 ← Hugo config (baseURL, disableKinds)
+│   ├── css/style.css         ← All styles (vars, layout, components, standard view)
+│   ├── js/terminal.js        ← All JS (~2200 lines, vanilla)
+│   ├── rex9840.png           ← Profile image (favicon fallback)
+│   ├── rex9840.webp          ← Profile image WebP (favicon preferred)
+│   ├── og-image.webp         ← OG/Twitter card image 1200×630 (WebP, 57KB)
+│   ├── og-image.png          ← OG image PNG fallback
+│   └── robots.txt            ← Overrides Hugo auto-gen; includes sitemap URL
+├── hugo.toml                 ← Hugo config
 └── .github/workflows/
     └── deploy.yml            ← CI: build + deploy to gh-pages branch
 ```
 
 ---
 
-## Data Layer
+## Data Layer — `data/portfolio.json`
 
-**`data/portfolio.json`** — single source of truth. Hugo injects it as `window.PORTFOLIO_DATA` at build time via:
+Single source of truth. Hugo injects it at build time:
 
 ```html
 <script>window.PORTFOLIO_DATA = JSON.parse({{ .Site.Data.portfolio | jsonify }});</script>
 ```
 
-Schema:
+### Full schema
+
 ```json
 {
   "profile": {
-    "name": "...", "location": "...", "bio": "...",
-    "email": "...", "github": "...", "linkedin": "...",
+    "name": "...",
+    "location": "...",
+    "bio": "...",                    ← shown in whoami, neofetch, standard view
+    "seoDescription": "...",         ← ≤155 chars; used in <meta description>, OG, JSON-LD
+    "email": "...",
+    "github": "...",
+    "linkedin": "...",
     "skills": ["Go", "Python", ...]
   },
   "experience": [
-    { "role": "...", "company": "...", "period": "...", "details": ["...", ...] }
+    {
+      "role": "...", "company": "...", "period": "...",
+      "highlight": "...",            ← one-line outcome metric, shown as ★ in experience command
+      "details": ["...", ...]
+    }
   ],
   "projects": [
     { "name": "...", "tech": "...", "description": "...", "github": "..." }
   ],
+  "now": {
+    "building": "...",               ← current work focus
+    "learning": "...",
+    "contributing": "...",
+    "reading": "...",
+    "updated": "Month YYYY"
+  },
   "customFiles": {
-    "notes.txt": "arbitrary content..."
+    "filename.txt": "content..."     ← appear as files under ~/user/ in the filesystem
   }
 }
 ```
 
-**To update content:** edit `data/portfolio.json` only. Nothing else needs to change.
+**To update content:** edit `data/portfolio.json` only.
 
 ---
 
 ## Architecture — terminal.js
 
-The file is organised into sections (search `══`):
+Sections (search `══`):
 
 | Section | What it does |
 |---|---|
 | `FILE SYSTEM` | Builds virtual FS from portfolio data |
 | `COMMANDS` | `processCommand()` switch — all terminal commands |
 | `THEMES` | Theme objects + `applyTheme()` |
-| `FILE TREE` | Sidebar explorer: `buildTreeNode()`, `renderFileTree()` |
+| `FILE TREE` | Sidebar: `buildTreeNode()`, `renderFileTree()` |
 | `TERMINAL STATE` | Module-level state vars |
 | `CLOCK + PATH` | Analog clock canvas + `updateTopbarPath()` breadcrumbs |
 | `TYPEWRITER` | Typewriter animation for text responses |
@@ -78,8 +100,9 @@ The file is organised into sections (search `══`):
 | `EXECUTE` | `executeCmd()` — runs a command, updates state |
 | `AUTOCOMPLETE` | `updateSuggestion()`, dropdown, `getContextCompletions()` |
 | `SIDEBAR` | `openSidebar()`, `closeSidebar()`, `toggleSidebar()` |
+| `VIEW SWITCHER` | `switchView()` — toggles terminal ↔ standard view |
 | `NEOVIM ENGINE` | Full nvim-like editor overlay |
-| `INIT` | Event wiring, `boot()` sequence |
+| `INIT` | Event wiring, `boot()`, welcome modal |
 
 ### Key state variables
 
@@ -89,46 +112,13 @@ let termHistory      // array of {id, command, response, path}
 let currentPath      // string[], e.g. ['home','user','projects']
 let suggestion       // ghost-text completion suffix
 let cmdHistory       // persisted to localStorage (last 100)
+let historyIdx       // position in history navigation
 let dropdownItems    // completions shown in dropdown
 let dropdownIdx      // active dropdown selection index
 let _argHint         // hint shown when no arg typed yet
-let activeFile       // full path array of last cat-ed file, e.g. ['home','user','bio.txt']
+let activeFile       // full path of last cat-ed file, e.g. ['home','user','bio.txt']
 const collapsedDirs  // Set of path keys; persisted to localStorage
 ```
-
----
-
-## Virtual Filesystem
-
-Built in `buildFileSystem()` from `PORTFOLIO_DATA`. Structure:
-
-```
-/ (root)
-└── home/
-    └── user/
-        ├── bio.txt
-        ├── skills.txt
-        ├── contact.txt
-        ├── projects/
-        │   ├── project_name.txt   ← auto-generated from projects[]
-        │   └── ...
-        └── experience/
-            ├── company_name.txt   ← auto-generated from experience[]
-            └── ...
-```
-
-`customFiles` entries appear directly under `user/`.
-
-File names are sanitized: `sanitize(name)` → lowercase, non-alphanumeric → `_`, `.txt` suffix.
-
-### Path resolution
-
-`resolvePath(currentPath, target)` handles:
-- `~` → `/home/user`
-- `~/<path>` → relative to home
-- `/absolute/path`
-- `relative/path` (relative to currentPath)
-- `..` and `.` segments
 
 ---
 
@@ -136,151 +126,210 @@ File names are sanitized: `sanitize(name)` → lowercase, non-alphanumeric → `
 
 | Command | Description |
 |---|---|
-| `help` | Show command reference |
-| `whoami` | Profile card |
+| `whoami` | Profile card with GitHub, LinkedIn, ⬇ Resume links |
 | `neofetch` | System-style info panel |
 | `banner` | ASCII art header |
 | `skills` | Skill badges grid |
 | `projects` | Project list with GitHub links |
-| `experience` | Work history |
-| `contact` | Clickable contact info |
-| `resume` | Download resume.md |
-| `ls [path]` | List directory contents (clickable) |
+| `experience` | Work history with ★ highlight per role |
+| `contact` | Clickable contact info with copy button |
+| `now` | What I'm currently building/learning/reading |
+| `blog` | ASCII art under-construction page with queued topics |
+| `resume` | Blob URL download of generated resume.md |
+| `ls [path]` | List directory (clickable items) |
 | `cd [path]` | Change directory |
-| `cat <file>` | Read file |
+| `cat <file>` | Read file; emails/URLs auto-linkified |
 | `pwd` | Print working directory |
-| `nvim/vim/vi <file>` | Open neovim-like editor |
-| `grep <pat> <file>` | Search with highlight |
+| `nvim/vim/vi <file>` | Open neovim-like editor overlay |
+| `grep <pat> <file>` | Search with regex highlight |
 | `touch <file>` | Create empty file (session only) |
 | `rm <file>` | Delete file (session only) |
 | `echo <text>` | Print text |
 | `history` | Show last 30 commands |
-| `open <url\|github\|linkedin>` | Open URL in new tab |
-| `theme [name]` | Switch theme (matrix/amber/nord/dracula) |
+| `open <target>` | Open URL (`github` · `linkedin` · `blog` · any URL) |
+| `theme [name]` | Switch theme (matrix · amber · nord · dracula) |
 | `clear` | Clear terminal |
+| `help` | Show command reference |
 
-**Tab autocomplete:** context-aware — `cd` completes dirs only, `cat`/`nvim` files only, `theme` theme names, `open` shows `github|linkedin`. Multiple matches open a dropdown; Tab cycles through items.
+**`cat` linkification:** file content is scanned for email addresses and URLs; matches are rendered as clickable `<a>` links.
 
-**History navigation:** ↑/↓ arrows cycle through persistent command history.
+**Tab autocomplete:** context-aware per command:
+- `cd` → dirs only
+- `cat`, `nvim`, `vim`, `vi`, `grep` → files only
+- `theme` → theme names
+- `open` → `['github', 'linkedin', 'blog']`
+- others → all children of current dir
+
+**Hint mode:** type a command + space (e.g. `theme `) to see ghost-text arg hint before typing.
+
+**Dropdown:** Tab with 2+ completions shows `#completion-menu`. Tab cycles, Escape/Enter dismiss.
 
 **Keyboard shortcuts:**
 - `Ctrl+C` — cancel input
 - `Ctrl+L` — clear terminal
 - `Ctrl+U` — clear current line
 - `Ctrl+W` — delete last word
-- `→` / `Tab` — accept autocomplete suggestion
+- `→` / `Tab` — accept ghost suggestion
 
 ---
 
 ## Theming
 
-Four built-in themes. All colours are CSS custom properties on `:root`.
+Default theme: **amber**. Persisted in `localStorage('portfolio-theme')`.
 
 | Theme | Accent | Background |
 |---|---|---|
-| `matrix` | `#3fb950` green | `#0d1117` |
-| `amber` | `#f59e0b` amber | `#0f0d08` |
-| `nord` | `#a3be8c` sage | `#2e3440` |
-| `dracula` | `#50fa7b` green | `#282a36` |
+| `amber` | `#f59e0b` | `#0f0d08` |
+| `matrix` | `#3fb950` | `#0d1117` |
+| `nord` | `#a3be8c` | `#2e3440` |
+| `dracula` | `#50fa7b` | `#282a36` |
 
-**To add a theme:** add an entry to the `THEMES` object in `terminal.js`. Key is the theme name; value is a map of CSS variable names to colour values. Copy an existing theme as a template.
+**To add a theme:** add an entry to the `THEMES` object in `terminal.js`. Copy an existing theme as a template.
 
-Active theme persisted in `localStorage('portfolio-theme')`.
+---
+
+## Views — Terminal vs Standard
+
+Two layouts, toggled by the `[⌨ Terminal] / [📄 Standard]` buttons in the topbar. Preference persisted to `localStorage('portfolio-view')`.
+
+### First-visit welcome modal
+
+On the very first visit (no `portfolio-view` in localStorage), a terminal-style modal prompts the user to choose their preferred view. Press `1`, `2`, or `Escape` (defaults to terminal). Never shown again after initial choice.
+
+### Terminal view
+
+The default. Full CLI experience — commands, filesystem, nvim, autocomplete.
+
+### Standard view (`#standard-view`)
+
+Hugo-rendered at build time (SEO-friendly, no JS flash). Sections:
+- **Hero** — avatar, name, role, bio, contact links
+- **Skills** — badge grid
+- **Experience** — cards with `highlight` field surfaced as `★ ...`
+- **Projects** — responsive grid with tech stack + GitHub links
+- **Footer CTA** — mailto link
+
+Toggle button also present inside the standard view layout.
+
+### `switchView(target)`
+
+```js
+switchView('standard')  // hides #app, shows #standard-view, sets body.sv-active
+switchView('terminal')  // restores #app, hides #standard-view, focuses input
+```
+
+Announces the switch to screen readers via `#sr-announcer`.
+
+---
+
+## Topbar
+
+Layout (left → right): `☰ menu` · `path breadcrumbs` · `[⌨/📄] switcher` · `clock`
+
+**Breadcrumbs:** `updateTopbarPath()` builds clickable `<span class="breadcrumb-seg">` elements. Clicking any segment runs `cd <path>`.
+
+**Clock:** `position: fixed` top-level element — visible in both terminal and standard view. Canvas analog clock + digital HH:MM:SS.
 
 ---
 
 ## Sidebar / Nav Panel
 
-VS Code-style explorer with terminal aesthetics.
-
 **Behaviour:**
-- Click directory → `cd` to it; sidebar stays open (user is navigating)
-- Click file → `cat` it; sidebar closes
-- Click `▶`/`▼` chevron → collapse/expand directory (state persisted)
-- Navigating via terminal commands auto-expands ancestors in the tree
-- Status bar at bottom shows current path + item count
+- Click dir → `cd` to it, sidebar stays open
+- Click file → `cat` it, sidebar closes
+- Click `▶`/`▼` chevron → collapse/expand (state in `localStorage('portfolio-collapsed')`)
+- Auto-expands ancestors when CWD changes via terminal
 
-**Active highlights** (green left-border + green text):
-- Current working directory (`currentPath`) → active dir highlight
-- Last `cat`-ed file (`activeFile`) → active file highlight
-- Both update instantly on every command; independent of each other
+**Active highlights** (green left-border):
+- Current dir (`currentPath`) → active dir
+- Last `cat`-ed file (`activeFile`) → active file
 
-**Resize:** drag the right edge to resize the sidebar panel. Min 180px, max 560px.
+**Status bar:** bottom strip showing `cwd` + item count.
 
-**Collapse state:** persisted in `localStorage('portfolio-collapsed')` as JSON array of path keys like `['home/user/projects']`.
+**Resize:** drag right edge. Min 180px, max 560px.
+
+---
+
+## 404 Page — `layouts/404.html`
+
+Full Hugo template (not a static file). Features:
+- Red block-character ASCII art `404`
+- Fake bash prompts showing the attempted path
+- `← cd ~`, `ls projects/`, `contact` action buttons
+- Shows profile name from `portfolio.json`
 
 ---
 
 ## Neovim Editor
 
-Triggered by `nvim <file>`, `vim <file>`, or `vi <file>`. Full overlay.
+Triggered by `nvim <file>`, `vim <file>`, or `vi <file>`.
 
-**Modes:** Normal, Insert, Command  
-**Key bindings:**
+**Modes:** Normal · Insert · Command
 
 | Key | Action |
 |---|---|
 | `i` / `I` / `a` / `A` / `o` / `O` | Enter insert mode |
-| `Esc` | Return to normal mode |
-| `h/j/k/l` or arrow keys | Move cursor |
-| `0` / `$` | Start / end of line |
-| `gg` / `G` | Top / bottom of file |
+| `Esc` | Normal mode |
+| `h/j/k/l` · arrows | Move cursor |
+| `0` / `$` | Line start / end |
+| `gg` / `G` | File top / bottom |
 | `dd` | Delete line |
-| `x` | Delete character |
-| `/` | Search forward |
-| `?` | Search backward |
-| `n` / `N` | Next / previous match |
-| `:w` | Save |
-| `:wq` | Save and quit |
-| `:q` | Quit (error if unsaved) |
-| `:q!` | Force quit |
+| `x` | Delete char |
+| `/` · `?` | Search forward · backward |
+| `n` / `N` | Next / prev match |
+| `:w` · `:wq` · `:q` · `:q!` | Save / save+quit / quit / force quit |
 | `ZZ` | Save and quit |
 
-Edits are written to the virtual filesystem node — `cat` will reflect changes in the same session.
+Edits persist to the virtual filesystem node for the session — `cat` reflects changes.
 
 ---
 
-## Autocomplete System
+## SEO & Meta
 
-`updateSuggestion(val)` runs on every keystroke.
+| Tag | Value source |
+|---|---|
+| `<meta description>` | `profile.seoDescription` (fallback: `profile.bio`) |
+| `og:description`, `twitter:description` | same |
+| `og:image`, `twitter:image` | `og-image.webp` (1200×630) |
+| `og:image:width/height` | 1200 / 630 |
+| `twitter:card` | `summary_large_image` |
+| JSON-LD Person `image` | `og-image.webp` |
+| JSON-LD Person `description` | `profile.seoDescription` |
+| Canonical | `{{ .Site.BaseURL }}` |
+| robots | `index, follow, noai, noimageai` |
 
-**Command completion (no arg):** searches `cmdHistory` reversed (history-first), falls back to `COMMANDS` array.
+**Hugo config:** `disableHugoGeneratorInject = true` — no `<meta name="generator">` tag.
 
-**Arg completion:** `getContextCompletions(cmd, path, partial)` returns:
-- `cd` → dirs only
-- `cat`, `nvim`, `vim`, `vi`, `grep` → files only
-- `theme` → theme names
-- `open` → `['github', 'linkedin']`
-- others → all children
+**robots.txt** (`static/robots.txt`): overrides Hugo auto-gen, includes `Sitemap:` URL.
 
-**Hint mode** (trailing space, no partial): shows `ARG_HINTS[cmd]` as ghost text, e.g. `theme ` → `matrix|amber|nord|dracula`.
-
-**Dropdown:** when 2+ completions exist, shown in `#completion-menu`. Tab cycles, Enter/Escape dismiss, click accepts.
+**HSTS:** handled by Cloudflare. Enable via Dashboard → SSL/TLS → Edge Certificates → HTTP Strict Transport Security.
 
 ---
 
-## Topbar Breadcrumbs
+## Accessibility
 
-`updateTopbarPath()` builds clickable `<span class="breadcrumb-seg">` elements for each path segment. Clicking navigates to that path via `executeCmd('cd <path>')`.
+- `#history` has `role="log" aria-live="polite" aria-atomic="false"` — screen readers announce new output
+- `#cmd-input` has `aria-label="Enter a terminal command"` + `.sr-only` `<label>`
+- `#sr-announcer` announces view switches (`role="status" aria-live="polite"`)
+- `.skip-link` — visible on Tab focus, jumps to `#terminal-scroll`
+- `.sr-only` utility class available globally
 
 ---
 
 ## Adding a New Command
 
-1. Add the command name to `COMMANDS` array (for Tab completion and `didYouMean`)
-2. Add a `case 'command':` block inside `processCommand()` returning `{ type: 'text', content: '...' }` or `{ type: 'node', node: domElement }` or `{ type: 'error', content: '...' }`
-3. Optionally add to `ARG_HINTS` if it takes arguments
-4. Update `getContextCompletions()` if it needs custom arg completion
-5. Add to the `help` command output
+1. Add name to `COMMANDS` array
+2. Add `case 'name':` in `processCommand()` — return `{ type: 'text', content }`, `{ type: 'node', node }`, or `{ type: 'error', content }`
+3. Add to `ARG_HINTS` if it takes arguments
+4. Update `getContextCompletions()` for custom arg completion
+5. Add to `help` command output
+6. Add a `<button class="qcmd" data-cmd="name">` in `#quick-cmds` if it deserves quick access
 
 ---
 
 ## Dev Setup
 
 ```bash
-# Install Hugo (extended) — one-time
-# https://gohugo.io/installation/
-
 # Serve locally with live reload
 hugo server
 
@@ -288,18 +337,17 @@ hugo server
 hugo --minify
 ```
 
-No npm, no Node.js, no build tools. Just Hugo.
+No npm. No Node.js. Hugo binary only.
 
-**Environment:** Hugo v0.147+ required (uses `jsonify` pipe).
+**Requirement:** Hugo v0.147+ (`jsonify` pipe used in templates).
 
 ---
 
 ## Deployment
 
-Push to `main` → GitHub Actions runs `.github/workflows/deploy.yml`:
-1. Checkout with submodules
-2. `peaceiris/actions-hugo@v3` sets up Hugo
-3. `hugo --minify` builds to `public/`
-4. `peaceiris/actions-gh-pages@v3` pushes `public/` to `gh-pages` branch
+Push to `main` → GitHub Actions (`.github/workflows/deploy.yml`):
+1. `peaceiris/actions-hugo@v3` sets up Hugo
+2. `hugo --minify` → `public/`
+3. `peaceiris/actions-gh-pages@v3` pushes `public/` to `gh-pages`
 
-Custom domain: `rupeshnepal.com.np` via `CNAME` file in `static/`.
+Custom domain `rupeshnepal.com.np` via `static/CNAME`. Cloudflare proxies GitHub Pages.

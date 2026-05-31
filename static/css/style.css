@@ -313,10 +313,14 @@ body.resizing { cursor: col-resize; user-select: none; }
 .breadcrumb-dollar { color: var(--gray-5); margin-left: 1px; }
 
 #clock-wrap {
-  margin-left: auto;
+  position: fixed;
+  top: 7px;
+  right: 16px;
   display: flex;
   align-items: center;
   gap: 8px;
+  z-index: 300;
+  pointer-events: none;
 }
 #analog-clock {
   display: block;
@@ -912,11 +916,10 @@ body.resizing { cursor: col-resize; user-select: none; }
    VIEW SWITCHER
 ══════════════════════════════════════ */
 #view-switcher {
-  position: fixed;
-  top: 8px; right: 14px;
   display: flex;
   gap: 3px;
-  z-index: 200;
+  margin-left: auto;
+  margin-right: 110px; /* keep clear of fixed clock */
 }
 .vsw-btn {
   background: var(--bg-sidebar);
@@ -1178,4 +1181,12 @@ body.sv-active #sidebar-backdrop { display: none; }
   border-radius: 3px; padding: 0 4px;
   font-family: monospace; font-size: 10px;
   color: var(--gray-4);
+}
+
+.sv-topnav {
+  display: flex;
+  justify-content: flex-end;
+  padding: 12px 0 0;
+  margin-bottom: 8px;
+  padding-right: 120px; /* clear fixed clock */
 }

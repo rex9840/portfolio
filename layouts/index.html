@@ -37,9 +37,9 @@
     "@type": "Person",
     "name": "{{ .Site.Data.portfolio.profile.name }}",
     "url": "{{ .Site.BaseURL }}",
-    "image": "{{ "rex9840.png" | absURL }}",
+    "image": "{{ "og-image.webp" | absURL }}",
     "jobTitle": "Backend Developer",
-    "description": "{{ .Site.Data.portfolio.profile.bio }}",
+    "description": "{{ .Site.Data.portfolio.profile.seoDescription | default .Site.Data.portfolio.profile.bio }}",
     "sameAs": [
       "{{ .Site.Data.portfolio.profile.github }}",
       "{{ .Site.Data.portfolio.profile.linkedin }}"
@@ -55,18 +55,24 @@
 </head>
 <body>
   <a href="#terminal-scroll" class="skip-link">Skip to terminal</a>
+  <div id="sr-announcer" role="status" aria-live="polite" aria-atomic="true" class="sr-only"></div>
+  <div id="clock-wrap">
+    <canvas id="analog-clock" width="34" height="34"></canvas>
+    <span id="topbar-clock"></span>
+  </div>
   <div class="scanline"></div>
   <div id="sidebar-backdrop"></div>
-
-  <!-- Always-visible view switcher -->
-  <div id="view-switcher" role="group" aria-label="Switch view">
-    <button class="vsw-btn active" data-target="terminal" aria-pressed="true">⌨ Terminal</button>
-    <button class="vsw-btn" data-target="standard" aria-pressed="false">📄 Standard</button>
-  </div>
 
   <!-- Standard CV view (Hugo-rendered, hidden by default) -->
   <div id="standard-view" hidden>
     <div class="sv-wrap">
+
+      <div class="sv-topnav">
+        <div id="sv-view-switcher" role="group" aria-label="Switch view">
+          <button class="vsw-btn" data-target="terminal" aria-pressed="false">⌨ Terminal</button>
+          <button class="vsw-btn active" data-target="standard" aria-pressed="true">📄 Standard</button>
+        </div>
+      </div>
 
       <header class="sv-hero">
         <img src="{{ "rex9840.webp" | relURL }}" alt="{{ .Site.Data.portfolio.profile.name }}" class="sv-avatar" width="96" height="96" />
@@ -146,9 +152,9 @@
       <div id="topbar">
         <button id="menu-btn" aria-label="Toggle sidebar">&#9776;</button>
         <span id="topbar-path">~</span>
-        <div id="clock-wrap">
-          <canvas id="analog-clock" width="34" height="34"></canvas>
-          <span id="topbar-clock"></span>
+        <div id="view-switcher" role="group" aria-label="Switch view">
+          <button class="vsw-btn active" data-target="terminal" aria-pressed="true">⌨ Terminal</button>
+          <button class="vsw-btn" data-target="standard" aria-pressed="false">📄 Standard</button>
         </div>
       </div>
 
@@ -189,6 +195,8 @@
           <button class="qcmd" data-cmd="projects">projects</button>
           <button class="qcmd" data-cmd="experience">experience</button>
           <button class="qcmd" data-cmd="contact">contact</button>
+          <button class="qcmd" data-cmd="now">now</button>
+          <button class="qcmd" data-cmd="blog">blog</button>
           <button class="qcmd" data-cmd="resume">⬇ resume</button>
           <button class="qcmd" data-cmd="ls">ls</button>
           <button class="qcmd" data-cmd="history">history</button>

@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 — bash: command not found | {{ .Site.Data.portfolio.profile.name }}</title>
+  <meta name="robots" content="noindex" />
+  <style>
+    :root {
+      --green: #f59e0b;
+      --bg:    #0f0d08;
+      --text:  #fef3c7;
+      --red:   #ef4444;
+      --gray4: #a8a29e;
+      --gray6: #57534e;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .terminal {
+      width: 100%;
+      max-width: 560px;
+    }
+
+    /* Fake window bar */
+    .win-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--gray6);
+      border-bottom: none;
+      border-radius: 6px 6px 0 0;
+      padding: 8px 14px;
+    }
+    .dot { width: 11px; height: 11px; border-radius: 50%; }
+    .dot-r { background: #f85149; }
+    .dot-y { background: #f59e0b; }
+    .dot-g { background: #3fb950; }
+    .win-title {
+      margin-left: 8px;
+      font-size: 11px;
+      color: var(--gray4);
+    }
+
+    /* Terminal body */
+    .win-body {
+      border: 1px solid var(--gray6);
+      border-radius: 0 0 6px 6px;
+      padding: 22px 24px 26px;
+      background: rgba(0,0,0,0.3);
+    }
+
+    .line { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 6px; margin-bottom: 4px; }
+    .ps   { color: var(--green); white-space: nowrap; }
+    .cmd  { color: var(--text); word-break: break-all; }
+
+    .err-line {
+      color: var(--red);
+      margin: 2px 0 20px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .err-line .path { color: #fca5a5; }
+
+    .status {
+      color: var(--gray4);
+      font-size: 12px;
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+    .status strong { color: var(--text); }
+
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; }
+    .btn {
+      color: var(--green);
+      border: 1px solid currentColor;
+      padding: 7px 18px;
+      border-radius: 4px;
+      text-decoration: none;
+      font-family: monospace;
+      font-size: 13px;
+      transition: background 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn:hover { background: rgba(245,158,11,0.1); }
+
+    .cursor {
+      display: inline-block;
+      width: 0.55em; height: 1em;
+      background: var(--green);
+      vertical-align: text-bottom;
+      margin-left: 2px;
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    @media (max-width: 480px) {
+      .win-body { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="terminal">
+    <div class="win-bar">
+      <span class="dot dot-r"></span>
+      <span class="dot dot-y"></span>
+      <span class="dot dot-g"></span>
+      <span class="win-title">{{ .Site.Data.portfolio.profile.name }} — bash — 80×24</span>
+    </div>
+    <div class="win-body">
+
+      <pre style="color:var(--red);font-size:10px;line-height:1.25;margin-bottom:18px;opacity:0.85">
+ ██╗  ██╗  ██████╗  ██╗  ██╗
+ ██║  ██║ ██╔═══██╗ ██║  ██║
+ ███████║ ██║   ██║ ███████║
+ ╚════██║ ██║   ██║ ╚════██║
+      ██║ ╚██████╔╝      ██║
+      ╚═╝  ╚═════╝       ╚═╝</pre>
+
+      <div class="line">
+        <span class="ps">{{ .Site.Data.portfolio.profile.name | lower | replaceRE `\s+` "" }}@portfolio:~$</span>
+        <span class="cmd">cd <span id="js-path"></span></span>
+      </div>
+      <div class="err-line">
+        bash: cd: <span class="path" id="js-path2"></span>: No such file or directory
+      </div>
+
+      <div class="line">
+        <span class="ps">{{ .Site.Data.portfolio.profile.name | lower | replaceRE `\s+` "" }}@portfolio:~$</span>
+        <span class="cmd">echo $?</span>
+      </div>
+      <div class="err-line">1</div>
+
+      <div class="line">
+        <span class="ps">{{ .Site.Data.portfolio.profile.name | lower | replaceRE `\s+` "" }}@portfolio:~$</span>
+        <span class="cursor"></span>
+      </div>
+
+      <div class="status" style="margin-top:24px">
+        <strong>Exit 404</strong> — that path doesn't exist in this filesystem.<br>
+        Try one of these instead:
+      </div>
+
+      <div class="actions">
+        <a href="{{ .Site.BaseURL }}" class="btn">cd ~</a>
+        <a href="{{ .Site.BaseURL }}#projects" class="btn">ls projects/</a>
+        <a href="mailto:{{ .Site.Data.portfolio.profile.email }}" class="btn">contact</a>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    var p = window.location.pathname || '/404';
+    document.getElementById('js-path').textContent  = p;
+    document.getElementById('js-path2').textContent = p;
+  </script>
+</body>
+</html>

@@ -116,6 +116,13 @@
     }
   ],
   "customFiles": {
-    "contribution.txt": "Always open for collaborations! Contact me via email."
+    "contribution.txt": "Always open for collaborations! Contact me via email: contact.rupesh.nepal@gmail.com"
+  },
+  "now": {
+    "building":     "ERP migration from Plentymarkets to Odoo at Hyteno Tech",
+    "learning":     "Rust async programming (Tokio)",
+    "contributing": "GNOME Nepal backend maintenance",
+    "reading":      "The Pragmatic Programmer",
+    "updated":      "June 2026"
   }
 }
