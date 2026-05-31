@@ -1,11 +1,11 @@
 {
   "profile": {
     "name": "Rupesh Nepal",
-    "location": "Ranibari, Samakhusi, Kathmandu",
+    "location": "Kathmandu, Nepal",
     "email": "contact.rupesh.nepal@gmail.com",
     "github": "https://github.com/rex9840",
     "linkedin": "https://www.linkedin.com/in/rupesh-nepal-62693920b/",
-    "bio": "Backend Developer passionate about building scalable web applications with Django & REST APIs. Experienced in cloud deployment, automation, and contributing to open-source communities like GNOME.",
+    "bio": "Backend developer working across Python, Rust, and Go. Currently at Hyteno Tech maintaining backend systems for Morgenland Teppiche — keeping product data consistent across their webshop and marketplace integrations. Previously built REST APIs and async systems at Shangrila Informatics and Ascend Crest Technologies. GNOME Nepal open source contributor.",
     "skills": [
       "Python", "Rust", "Go",
       "Django", "Flask", "FastAPI", "Actix", "Gin",
@@ -15,9 +15,22 @@
   },
   "experience": [
     {
+      "company": "Hyteno Tech (Client: Morgenland Teppiche)",
+      "role": "Backend Developer",
+      "period": "2025-present",
+      "details": [
+        "Built a Shopify → central database sync pipeline, consolidating product and inventory data across eBay, Amazon, ManoMano, and Home24 into a single source of truth.",
+        "Implemented monthly dynamic pricing strategy across webshop channels to optimise sales performance and margins.",
+        "Maintained product data feeds for Google Shopping, Meta Catalog, and Pinterest Ads — ensuring feed accuracy for live ad campaigns and marketplace catalogs.",
+        "Orchestrated multi-marketplace catalog synchronisation using Channable, keeping listings consistent across 4+ sales channels.",
+        "Deployed and managed multiple production applications via Dokploy, reducing deployment overhead and improving operational visibility.",
+        "Leading ERP migration from Plentymarkets to Odoo, ensuring data integrity and continuity across the transition."
+      ]
+    },
+    {
       "company": "Shangrila Informatics Pvt. Ltd.",
       "role": "Backend developer",
-      "period": "2025-present (full-time)",
+      "period": "2025 (full-time)",
       "details": [
         "Developed and maintained scalable REST APIs using Django and Django REST Framework (DRF).",
         "Refactored legacy Django code to enhance performance and improve code readability.",
@@ -33,12 +46,12 @@
       "role": "Backend/Django developer",
       "period": "2023-present (part-time)",
       "details": [
-        "Designed and implemented a C2C e-commerce backend system using Django & DRF.",
-        "Integrated asynchronous background tasks with Celery/Redis and WebSockets with Django Channels.",
-        "Implemented Stripe payment gateway integration.",
-        "Streamlined deployment workflows with GitHub Actions CI/CD.",
-        "Managed Docker containerization.",
-        "Deployed on AWS EC2 with Gunicorn/Flower and Cloudflare/R2 for storage."
+        "Built the backend for BetzBazar, a C2C music beats marketplace, using Django and Django REST Framework.",
+        "Implemented SOX-based audio watermarking — overlaying beat samples with an inaudible background sound on preview playback, making raw samples un-pirateable before purchase.",
+        "Integrated Stripe payment gateway for beat licensing transactions, handling one-time purchases and license tier management.",
+        "Added real-time features with Django Channels WebSockets (live notifications, purchase confirmations).",
+        "Set up Celery/Redis async task pipeline for audio processing jobs and background task handling.",
+        "Built CI/CD pipeline with GitHub Actions, deployed on AWS EC2 with Gunicorn/Flower and Cloudflare/R2 for audio file storage."
       ]
     },
     {
@@ -95,7 +108,6 @@
       "github": "https://github.com/rex9840/recursive-cfg-parser"
     }
   ],
-  "readme": "Welcome to the portfolio file system!\nUse standard shell commands to navigate:\n- cd <dir>: Change directory\n- ls: List contents\n- cat <file>: Read file\n- clear: Clear screen",
   "customFiles": {
     "contribution.txt": "Always open for collaborations! Contact me via email."
   }

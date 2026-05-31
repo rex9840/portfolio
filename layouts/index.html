@@ -35,15 +35,9 @@
     "@type": "Person",
     "name": "{{ .Site.Data.portfolio.profile.name }}",
     "url": "{{ .Site.BaseURL }}",
-    "email": "{{ .Site.Data.portfolio.profile.email }}",
     "image": "{{ "rex9840.png" | absURL }}",
     "jobTitle": "Backend Developer",
     "description": "{{ .Site.Data.portfolio.profile.bio }}",
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "Kathmandu",
-      "addressCountry": "NP"
-    },
     "sameAs": [
       "{{ .Site.Data.portfolio.profile.github }}",
       "{{ .Site.Data.portfolio.profile.linkedin }}"
@@ -64,6 +58,10 @@
     <!-- Sidebar -->
     <aside id="sidebar">
       <div id="file-tree"></div>
+      <div id="sidebar-statusbar">
+        <span id="sidebar-cwd"></span>
+        <span id="sidebar-count"></span>
+      </div>
       <div id="resize-handle"></div>
     </aside>
 
@@ -73,7 +71,10 @@
       <div id="topbar">
         <button id="menu-btn" aria-label="Toggle sidebar">&#9776;</button>
         <span id="topbar-path">~</span>
-        <span id="topbar-clock"></span>
+        <div id="clock-wrap">
+          <canvas id="analog-clock" width="34" height="34"></canvas>
+          <span id="topbar-clock"></span>
+        </div>
       </div>
 
       <!-- Terminal output -->
@@ -83,6 +84,8 @@
 
       <!-- Input area -->
       <div id="input-area">
+        <!-- Completion dropdown -->
+        <div id="completion-menu"></div>
         <div id="input-line">
           <span id="prompt-current" class="prompt"></span>
           <div id="input-wrapper">
@@ -103,18 +106,32 @@
 
         <!-- Quick commands -->
         <div id="quick-cmds">
-          <button class="qcmd" data-cmd="help">help</button>
-          <button class="qcmd" data-cmd="ls">ls</button>
           <button class="qcmd" data-cmd="whoami">whoami</button>
+          <button class="qcmd" data-cmd="neofetch">neofetch</button>
           <button class="qcmd" data-cmd="skills">skills</button>
           <button class="qcmd" data-cmd="projects">projects</button>
           <button class="qcmd" data-cmd="experience">experience</button>
           <button class="qcmd" data-cmd="contact">contact</button>
-          <button class="qcmd" data-cmd="theme list">theme</button>
+          <button class="qcmd" data-cmd="resume">⬇ resume</button>
+          <button class="qcmd" data-cmd="ls">ls</button>
+          <button class="qcmd" data-cmd="history">history</button>
+          <button class="qcmd" data-cmd="theme list">themes</button>
+          <button class="qcmd" data-cmd="help">help</button>
           <button class="qcmd" data-cmd="clear">clear</button>
         </div>
       </div>
     </main>
+  </div>
+
+  <!-- Neovim overlay -->
+  <div id="nvim-overlay">
+    <div id="nvim-editor"></div>
+    <div id="nvim-statusline">
+      <span id="nvim-mode-label"></span>
+      <span id="nvim-file-label"></span>
+      <span id="nvim-pos-label"></span>
+    </div>
+    <div id="nvim-cmdline"></div>
   </div>
 
   <script src="{{ "js/terminal.js" | relURL }}"></script>

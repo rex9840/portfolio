@@ -3,3 +3,17 @@ title   = "Rupesh Nepal | Terminal Portfolio"
 
 disableKinds = ["taxonomy", "term"]
 enableRobotsTXT = true
+
+[mediaTypes]
+  [mediaTypes."text/markdown"]
+    suffixes = ["md"]
+
+[outputFormats]
+  [outputFormats.Resume]
+    mediaType  = "text/markdown"
+    baseName   = "resume"
+    isPlainText = true
+    notAlternative = true
+
+[outputs]
+  home = ["HTML", "Resume"]

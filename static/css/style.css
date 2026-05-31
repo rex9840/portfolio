@@ -175,11 +175,73 @@ body.resizing { cursor: col-resize; user-select: none; }
   line-height: 1.6;       /* vertically align with first line of name */
 }
 .tree-node-name {
-  word-break: break-all;  /* long filenames wrap */
+  word-break: break-all;
   line-height: 1.6;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .tree-node-name.dir  { color: var(--blue-4); font-weight: bold; }
 .tree-node-name.file { color: var(--gray-3); }
+
+/* Collapse chevron */
+.tree-chevron {
+  flex-shrink: 0;
+  width: 14px;
+  color: var(--gray-6);
+  font-size: 8px;
+  line-height: 1.6;
+  text-align: center;
+  transition: color 0.15s;
+  user-select: none;
+}
+.tree-node:hover .tree-chevron { color: var(--gray-4); }
+
+/* Active CWD node */
+.tree-node.active {
+  background: rgba(63,185,80,0.07);
+  border-left: 2px solid var(--green);
+  padding-left: 4px;
+}
+.tree-node.active .tree-node-name { color: var(--green) !important; }
+.tree-node.active .tree-prefix    { color: var(--gray-5); }
+
+/* Item count badge */
+.tree-badge {
+  margin-left: auto;
+  padding-left: 6px;
+  color: var(--gray-7);
+  font-size: 9px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Sidebar status bar */
+#sidebar-statusbar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px 5px 12px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  background: rgba(0,0,0,0.2);
+  font-family: monospace;
+  font-size: 10px;
+}
+#sidebar-cwd {
+  color: var(--green);
+  opacity: 0.75;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#sidebar-count {
+  margin-left: auto;
+  color: var(--gray-6);
+  white-space: nowrap;
+  font-size: 9px;
+}
 
 /* ── Main area (always full width) ── */
 #main {
@@ -215,16 +277,39 @@ body.resizing { cursor: col-resize; user-select: none; }
 #menu-btn:active { color: var(--green); border-color: var(--green); }
 
 #topbar-path {
-  color: var(--green);
   font-size: 12px;
   font-family: monospace;
-  opacity: 0.8;
-  transition: opacity 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0;
 }
+.breadcrumb-static { color: var(--gray-5); }
+.breadcrumb-sep    { color: var(--gray-6); margin: 0 1px; }
+.breadcrumb-seg {
+  color: var(--green);
+  cursor: pointer;
+  opacity: 0.75;
+  border-radius: 2px;
+  padding: 0 2px;
+  transition: opacity 0.15s, background 0.15s;
+}
+.breadcrumb-seg:last-child { opacity: 1; }
+.breadcrumb-seg:hover { opacity: 1; background: rgba(255,255,255,0.06); }
+.breadcrumb-dollar { color: var(--gray-5); margin-left: 1px; }
 
-#topbar-clock {
+#clock-wrap {
   margin-left: auto;
-  color: var(--gray-6);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+#analog-clock {
+  display: block;
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+#topbar-clock {
+  color: var(--gray-5);
   font-size: 11px;
   font-family: monospace;
   letter-spacing: 0.05em;
@@ -297,11 +382,25 @@ body.resizing { cursor: col-resize; user-select: none; }
 #ghost-text {
   position: absolute;
   left: 0; top: 0;
-  color: var(--gray-6);
   white-space: pre;
   pointer-events: none;
   z-index: 1;
 }
+/* actual autocomplete suggestion */
+#ghost-text .ghost-suggestion {
+  color: var(--gray-4);
+  text-decoration: underline;
+  text-decoration-color: var(--gray-6);
+  text-decoration-style: dotted;
+  text-underline-offset: 3px;
+}
+/* empty-input placeholder hint */
+#ghost-text.placeholder {
+  color: var(--gray-5);
+  opacity: 0.5;
+  font-style: italic;
+}
+#ghost-text.hint { color: var(--gray-6); opacity: 0.55; font-style: italic; }
 #cmd-input {
   position: absolute;
   inset: -12px -24px;
@@ -330,6 +429,36 @@ body.resizing { cursor: col-resize; user-select: none; }
   position: relative;
   z-index: 2;
 }
+
+/* ── Completion dropdown ── */
+#completion-menu {
+  display: none;
+  position: relative;
+  background: var(--bg-sidebar);
+  border-top: 1px solid var(--gray-7);
+  border-bottom: 1px solid var(--gray-7);
+  font-family: monospace;
+  font-size: 12px;
+  max-height: 160px;
+  overflow-y: auto;
+}
+#completion-menu.open { display: block; }
+.ci {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 16px;
+  cursor: pointer;
+  color: var(--gray-3);
+  transition: background 0.1s;
+  white-space: nowrap;
+}
+.ci:hover, .ci.active { background: rgba(255,255,255,0.07); color: var(--green); }
+.ci-icon { color: var(--gray-6); width: 1.2em; flex-shrink: 0; }
+.ci-dir  { color: var(--blue-4); font-weight: bold; }
+.ci-file { color: var(--gray-3); }
+.ci-cmd  { color: var(--green); }
+.ci-hint { color: var(--gray-5); font-size: 10px; margin-left: auto; padding-left: 12px; }
 
 /* ── Quick commands (always visible) ── */
 #quick-cmds {
@@ -428,6 +557,122 @@ body.resizing { cursor: col-resize; user-select: none; }
 .banner-hint  { font-size: 11px; opacity: 0.7; margin-top: 3px; }
 .banner-hint strong { color: var(--green); }
 
+/* ── whoami card ── */
+.whoami-card { display: flex; flex-direction: column; gap: 6px; font-family: monospace; }
+.whoami-name { color: var(--green); font-size: 18px; font-weight: bold; letter-spacing: 0.05em; }
+.whoami-role { color: var(--gray-4); font-size: 13px; }
+.whoami-loc  { color: var(--gray-5); font-size: 12px; }
+.whoami-bio  { color: var(--gray-3); font-size: 12px; line-height: 1.6; margin-top: 4px; max-width: 60ch; }
+.whoami-links { display: flex; gap: 14px; margin-top: 6px; }
+.whoami-link {
+  color: var(--blue-4);
+  font-size: 12px;
+  text-decoration: none;
+}
+.whoami-link:hover { text-decoration: underline; }
+
+/* ── neofetch ── */
+.neofetch {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  font-family: monospace;
+  font-size: 12px;
+}
+.neofetch-art {
+  color: var(--green);
+  font-size: 13px;
+  line-height: 1.4;
+  flex-shrink: 0;
+  margin: 0;
+}
+.neofetch-info { display: flex; flex-direction: column; gap: 3px; }
+.neofetch-title { color: var(--green); font-weight: bold; font-size: 13px; }
+.neofetch-row { display: flex; }
+.neofetch-key { color: var(--green); min-width: 9ch; flex-shrink: 0; }
+.neofetch-val { color: var(--text); }
+.neofetch-palette { display: flex; gap: 5px; margin-top: 8px; }
+.neofetch-dot { width: 14px; height: 14px; border-radius: 2px; display: inline-block; }
+
+/* ── contact ── */
+.contact-list { display: flex; flex-direction: column; gap: 8px; font-family: monospace; }
+.contact-row  { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.contact-label { color: var(--green); min-width: 9ch; font-size: 13px; }
+.contact-link {
+  color: var(--blue-4);
+  font-size: 12px;
+  text-decoration: none;
+}
+.contact-link:hover { text-decoration: underline; }
+.copy-btn {
+  background: transparent;
+  border: 1px solid var(--gray-7);
+  color: var(--gray-5);
+  font-family: monospace;
+  font-size: 10px;
+  padding: 1px 7px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+.copy-btn:hover { color: var(--green); border-color: var(--green); }
+
+/* ── Resume ── */
+.resume-wrap { display: flex; flex-direction: column; gap: 12px; }
+
+.resume-progress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: monospace;
+  font-size: 11px;
+}
+.resume-bar {
+  height: 4px;
+  width: 0%;
+  background: var(--green);
+  border-radius: 2px;
+  transition: width 0.12s ease;
+  flex-shrink: 0;
+  max-width: 160px;
+  min-width: 0;
+}
+.resume-progress:has(.resume-bar[style*="width: 0"]) .resume-bar { display: none; }
+.resume-label {
+  color: var(--gray-5);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.resume-dl-btn {
+  display: inline-block;
+  align-self: flex-start;
+  background: var(--green);
+  color: var(--bg);
+  border: none;
+  font-family: monospace;
+  font-size: 13px;
+  font-weight: bold;
+  padding: 8px 18px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  letter-spacing: 0.03em;
+  text-decoration: none;
+}
+.resume-dl-btn:hover { opacity: 0.85; }
+
+.resume-preview {
+  font-family: monospace;
+  font-size: 11px;
+  color: var(--gray-4);
+  white-space: pre-wrap;
+  border-left: 2px solid var(--gray-7);
+  padding-left: 12px;
+  margin: 0;
+  line-height: 1.6;
+}
+
 /* ── Project links ── */
 .project-link { margin-top: 3px; }
 .project-link a {
@@ -497,6 +742,84 @@ body.resizing { cursor: col-resize; user-select: none; }
 .exp-company   { color: var(--gray-4); }
 .exp-period    { color: var(--gray-5); font-size: 12px; margin: 2px 0 6px; }
 .exp-detail    { color: var(--gray-3); font-size: 12px; line-height: 1.7; }
+
+/* ══════════════════════════════════════
+   NEOVIM OVERLAY
+══════════════════════════════════════ */
+#nvim-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 999;
+  flex-direction: column;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 13px;
+}
+#nvim-overlay.active { display: flex; }
+
+#nvim-editor {
+  flex: 1;
+  overflow: hidden;
+  padding: 0 2px;
+  line-height: 1.5;
+}
+
+.nvim-line {
+  display: block;
+  padding: 0 6px;
+  white-space: pre;
+  color: var(--text);
+  line-height: 1.5;
+  min-height: 1.5em;
+}
+.nvim-tilde { color: var(--blue-5); opacity: 0.5; }
+
+.nvim-cursor {
+  background: var(--text);
+  color: var(--bg);
+  display: inline-block;
+  min-width: 0.6em;
+}
+.nvim-cursor-insert {
+  background: transparent;
+  color: var(--text);
+  border-left: 2px solid var(--green);
+  margin-left: -2px;
+}
+
+#nvim-statusline {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--green);
+  color: var(--bg);
+  padding: 0 8px;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 1.7;
+  flex-shrink: 0;
+  gap: 8px;
+}
+#nvim-mode-label { min-width: 12ch; }
+#nvim-file-label { flex: 1; text-align: center; }
+#nvim-pos-label  { text-align: right; min-width: 10ch; white-space: nowrap; }
+
+.nvim-search-match {
+  background: rgba(245,158,11,0.35);
+  color: var(--text);
+  border-radius: 1px;
+}
+
+#nvim-cmdline {
+  flex-shrink: 0;
+  padding: 2px 8px;
+  min-height: 1.6em;
+  color: var(--text);
+  font-size: 12px;
+  line-height: 1.5;
+  white-space: pre;
+}
 
 /* ── Scrollbar ── */
 #terminal-scroll::-webkit-scrollbar { width: 5px; }
