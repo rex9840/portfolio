@@ -758,16 +758,18 @@ Tips: Tab/→ autocomplete · ↑/↓ history`
       progress.appendChild(bar);
       progress.appendChild(label);
 
-      // Download button — real <a> so browser handles download natively on click
+      // Download via Blob URL — no static file dependency, always reflects portfolio.json
       const filename = config.profile.name.replace(/\s+/g, '_') + '_Resume.md';
+      const blob = new Blob([md], { type: 'text/markdown' });
+      const blobUrl = URL.createObjectURL(blob);
       const btn = document.createElement('a');
       btn.className = 'resume-dl-btn';
-      btn.href = 'resume.md';
+      btn.href = blobUrl;
       btn.download = filename;
       btn.textContent = '⬇  download resume.md';
 
-      // Progress bar is purely cosmetic — plays alongside the native download
       btn.addEventListener('click', () => {
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
         const steps = [
           [20,  'Collecting profile…'],
           [45,  'Writing experience…'],
