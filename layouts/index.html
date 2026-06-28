@@ -44,7 +44,7 @@
       "{{ .Site.Data.portfolio.profile.github }}",
       "{{ .Site.Data.portfolio.profile.linkedin }}"
     ],
-    "knowsAbout": {{ .Site.Data.portfolio.profile.skills | jsonify }}
+    "knowsAbout": {{ .Site.Data.portfolio.profile.skills | jsonify | safeJS }}
   }
   </script>
 
@@ -250,6 +250,6 @@
     <div id="nvim-cmdline"></div>
   </div>
 
-  <script src="{{ "js/terminal.js" | relURL }}"></script>
+  <script src="{{ "js/terminal.js" | relURL }}" defer></script>
 </body>
 </html>
