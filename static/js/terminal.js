@@ -1,6 +1,16 @@
 /* ── Portfolio data injected by Hugo ── */
 const config = window.PORTFOLIO_DATA;
 
+/* Email is base64-encoded in the data so it stays out of the static HTML
+   (defeats regex/SERP scrapers). Decode at runtime for use everywhere.
+   ponytail: base64 only stops naive harvesters; a JS-executing scraper still
+   gets it. Move to a contact form if spam becomes a real problem. */
+config.profile.email = atob(config.profile.emailEnc);
+document.querySelectorAll('[data-email]').forEach((a) => {
+  a.href = 'mailto:' + config.profile.email;
+  if (a.hasAttribute('data-email-text')) a.textContent = config.profile.email;
+});
+
 /* ══════════════════════════════════════
    FILE SYSTEM
 ══════════════════════════════════════ */

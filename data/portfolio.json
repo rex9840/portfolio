@@ -2,11 +2,11 @@
   "profile": {
     "name": "Rupesh Nepal",
     "location": "Kathmandu, Nepal",
-    "email": "contact.rupesh.nepal@gmail.com",
+    "emailEnc": "Y29udGFjdC5ydXBlc2gubmVwYWxAZ21haWwuY29t",
     "github": "https://github.com/rex9840",
     "linkedin": "https://www.linkedin.com/in/rupesh-nepal-62693920b/",
     "bio": "Backend developer working across Python, Rust, and Go. Currently at Hyteno Tech maintaining backend systems for Morgenland Teppiche — keeping product data consistent across their webshop and marketplace integrations. Previously built REST APIs and async systems at Shangrila Informatics and Ascend Crest Technologies. GNOME Nepal open source contributor.",
-    "seoDescription": "Backend developer specialising in Python, Rust & Go. Building scalable APIs, async systems, and open-source tools. GNOME Nepal contributor.",
+    "seoDescription": "Backend developer specialising in Python, Rust and Go. Building scalable APIs, async systems, and open-source tools. GNOME Nepal contributor.",
     "skills": [
       "Python", "Rust", "Go",
       "Django", "Flask", "FastAPI", "Actix", "Gin",
@@ -116,7 +116,7 @@
     }
   ],
   "customFiles": {
-    "contribution.txt": "Always open for collaborations! Contact me via email: contact.rupesh.nepal@gmail.com"
+    "contribution.txt": "Always open for collaborations! Run the `email` command to get in touch."
   },
   "now": {
     "building":     "ERP migration from Plentymarkets to Odoo at Hyteno Tech",
