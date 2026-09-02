@@ -10,7 +10,7 @@
     "skills": [
       "Python", "Rust", "Go",
       "Django", "Flask", "FastAPI", "Actix", "Gin",
-      "PostgreSQL", "MySQL", "SQLite",
+      "PostgreSQL", "MySQL",
       "Docker", "AWS", "Cloudflare", "CI/CD"
     ]
   },
