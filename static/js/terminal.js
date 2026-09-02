@@ -190,6 +190,7 @@ function generateResumeMD() {
     lines.push(`### ${proj.name} \`[${proj.tech}]\``);
     lines.push(proj.description);
     if (proj.github) lines.push(`[GitHub](${proj.github})`);
+    if (proj.url) lines.push(`[Live](${proj.url})`);
     lines.push('');
   });
 
@@ -598,6 +599,18 @@ Tips: Tab/→ autocomplete · ↑/↓ history`
           a.target = '_blank';
           a.rel = 'noopener noreferrer';
           a.textContent = '↗ ' + p.github.replace('https://', '');
+          link.appendChild(a);
+          entry.appendChild(link);
+        }
+
+        if (p.url) {
+          const link = document.createElement('div');
+          link.className = 'project-link';
+          const a = document.createElement('a');
+          a.href = p.url;
+          a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+          a.textContent = '↗ ' + p.url.replace('https://', '');
           link.appendChild(a);
           entry.appendChild(link);
         }

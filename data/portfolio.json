@@ -47,7 +47,7 @@
     {
       "company": "Ascend Crest Technologies",
       "role": "Backend/Django developer",
-      "period": "2023-present (part-time)",
+      "period": "2023-2024 (part-time)",
       "highlight": "Built BetzBazar — C2C beats marketplace with SOX audio watermarking, Stripe payments, and real-time WebSockets.",
       "details": [
         "Built the backend for BetzBazar, a C2C music beats marketplace, using Django and Django REST Framework.",
@@ -67,7 +67,19 @@
         "Major Contributor and Maintainer of the GNOME Nepal Backend System (Django).",
         "Contributed to 'Djate', a production-ready Django project template used by the community.",
         "Collaborated with open source contributors across Nepal to build and maintain community infrastructure.",
-        "Reviewed pull requests, triaged issues, and mentored new contributors to the Django ecosystem."
+        "Reviewed pull requests, triaged issues, and mentored new contributors to the Django ecosystem.",
+        "Taught students about Linux and the GNOME desktop as a workshop instructor."
+      ]
+    },
+    {
+      "company": "Ubuntu Nepal",
+      "role": "Operations Lead",
+      "period": "2025-present",
+      "highlight": "Operations Lead for UbuCon Asia 2025 — ran event operations and social media.",
+      "details": [
+        "Operations Lead for UbuCon Asia 2025, hosted by Ubuntu Nepal.",
+        "Ran on-ground event operations across the multi-day conference.",
+        "Ran the event's social media campaign throughout UbuCon Asia 2025."
       ]
     }
   ],
@@ -113,6 +125,12 @@
       "tech": "Rust",
       "description": "Compiler logic to parse context-free grammars.",
       "github": "https://github.com/rex9840/recursive-cfg-parser"
+    },
+    {
+      "name": "Ghar Bhada",
+      "tech": "Python, TypeScript",
+      "description": "Rental aggregator for Nepal — consolidates listings from 20+ sites and direct owner submissions onto one searchable map, with saved-search alerts and below-market price flags.",
+      "url": "https://ghar-bhada.com"
     }
   ],
   "customFiles": {

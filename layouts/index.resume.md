@@ -2,7 +2,7 @@
 {{- $d := .Site.Data.portfolio -}}
 # {{ $p.name }}
 **Backend Developer** · {{ $p.location }}
-{{ $p.email }} · {{ $p.github }} · {{ $p.linkedin }}
+{{ $p.emailEnc | base64Decode }} · {{ $p.github }} · {{ $p.linkedin }}
 
 ---
 
@@ -32,5 +32,6 @@
 {{ range $d.projects }}
 ### {{ .name }} [{{ .tech }}]
 {{ .description }}{{ with .github }}
-GitHub: {{ . }}{{ end }}
+GitHub: {{ . }}{{ end }}{{ with .url }}
+Live: {{ . }}{{ end }}
 {{ end }}
