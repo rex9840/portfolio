@@ -81,6 +81,7 @@
           <p class="sv-role">Backend Developer &middot; {{ .Site.Data.portfolio.profile.location }}</p>
           <p class="sv-bio">{{ .Site.Data.portfolio.profile.bio }}</p>
           <div class="sv-links">
+            {{ with .Site.Data.portfolio.profile.website }}<a href="{{ . }}" target="_blank" rel="noopener noreferrer">Website ↗</a>{{ end }}
             <a href="{{ .Site.Data.portfolio.profile.github }}"   target="_blank" rel="noopener noreferrer">GitHub ↗</a>
             <a href="{{ .Site.Data.portfolio.profile.linkedin }}" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
             <a href="#" data-email data-email-text rel="nofollow">Email</a>
@@ -123,6 +124,7 @@
             </div>
             <p class="sv-card-desc">{{ .description }}</p>
             {{ with .github }}<a href="{{ . }}" class="sv-card-link" target="_blank" rel="noopener noreferrer">View on GitHub ↗</a>{{ end }}
+            {{ with .url }}<a href="{{ . }}" class="sv-card-link" target="_blank" rel="noopener noreferrer">Visit site ↗</a>{{ end }}
           </div>
           {{ end }}
         </div>

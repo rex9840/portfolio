@@ -2,7 +2,7 @@
 {{- $d := .Site.Data.portfolio -}}
 # {{ $p.name }}
 **Backend Developer** · {{ $p.location }}
-{{ $p.emailEnc | base64Decode }} · {{ $p.github }} · {{ $p.linkedin }}
+{{ $p.emailEnc | base64Decode }} · {{ with $p.website }}{{ . }} · {{ end }}{{ $p.github }} · {{ $p.linkedin }}
 
 ---
 

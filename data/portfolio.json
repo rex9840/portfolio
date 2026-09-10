@@ -3,6 +3,7 @@
     "name": "Rupesh Nepal",
     "location": "Kathmandu, Nepal",
     "emailEnc": "Y29udGFjdC5ydXBlc2gubmVwYWxAZ21haWwuY29t",
+    "website": "https://rupeshnepal.com.np",
     "github": "https://github.com/rex9840",
     "linkedin": "https://www.linkedin.com/in/rupesh-nepal-62693920b/",
     "bio": "Backend developer working across Python, Rust, and Go. Currently at Hyteno Tech maintaining backend systems for Morgenland Teppiche — keeping product data consistent across their webshop and marketplace integrations. Previously built REST APIs and async systems at Shangrila Informatics and Ascend Crest Technologies. GNOME Nepal open source contributor.",
@@ -88,43 +89,43 @@
       "name": "Git Commit Visualizer",
       "tech": "Go, CLI",
       "description": "CLI tool to visualize git contributions similar to GitHub/GitLab contribution graphs.",
-      "github": "https://github.com/rex9840/git-commit-visualizer"
+      "github": "https://github.com/rex9840/git-loca-visualizer"
     },
     {
       "name": "URL Shortener",
       "tech": "Go, Gin",
       "description": "URL shortener service demonstrating modular Go structure and database communication.",
-      "github": "https://github.com/rex9840/url-shortener"
+      "github": "https://github.com/rex9840/GoUrlShortner"
     },
     {
       "name": "Library Management System",
       "tech": "Django, DRF",
       "description": "REST API replication of a library management system.",
-      "github": "https://github.com/rex9840/library-management"
+      "github": "https://github.com/rex9840/LibraryManagementSystem"
     },
     {
-      "name": "Book Recommendation System",
-      "tech": "Python, ML (K-means)",
-      "description": "Recommendation engine clustering books based on user ratings.",
-      "github": "https://github.com/rex9840/book-recommendation"
+      "name": "LearnRust",
+      "tech": "Rust",
+      "description": "Notes and worked examples covering Rust fundamentals — ownership, borrowing, traits, and error handling.",
+      "github": "https://github.com/rex9840/LearnRust"
     },
     {
       "name": "Tabular to JSON Converter",
       "tech": "Rust",
       "description": "Web scraping tool to convert tabular data to structured JSON.",
-      "github": "https://github.com/rex9840/tabular-to-json"
+      "github": "https://github.com/rex9840/TabularToJsonUsingRust_WebScraping"
     },
     {
       "name": "Rust Web App",
       "tech": "Rust, Actix",
       "description": "Web application leveraging Rust's adaptability.",
-      "github": "https://github.com/rex9840/rust-web-app"
+      "github": "https://github.com/rex9840/webApp-using-Actix"
     },
     {
       "name": "Recursive CFG Parser",
       "tech": "Rust",
       "description": "Compiler logic to parse context-free grammars.",
-      "github": "https://github.com/rex9840/recursive-cfg-parser"
+      "github": "https://github.com/rex9840/RecursiveParserForCFG"
     },
     {
       "name": "Ghar Bhada",

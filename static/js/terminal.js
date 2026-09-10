@@ -58,7 +58,7 @@ function buildFileSystem() {
               'skills.txt': { type: 'file', content: config.profile.skills.join('\n') },
               'contact.txt': {
                 type: 'file',
-                content: `Email: ${config.profile.email}\nGitHub: ${config.profile.github}\nLinkedIn: ${config.profile.linkedin}`
+                content: `Email: ${config.profile.email}\nWebsite: ${config.profile.website}\nGitHub: ${config.profile.github}\nLinkedIn: ${config.profile.linkedin}`
               },
               projects:   { type: 'dir', children: projectFiles },
               experience: { type: 'dir', children: experienceFiles },
@@ -163,7 +163,7 @@ function generateResumeMD() {
 
   lines.push(`# ${p.name}`);
   lines.push(`**Backend Developer** · ${p.location}`);
-  lines.push(`${p.email} · [GitHub](${p.github}) · [LinkedIn](${p.linkedin})`);
+  lines.push(`${p.email}${p.website ? ` · [Website](${p.website})` : ''} · [GitHub](${p.github}) · [LinkedIn](${p.linkedin})`);
   lines.push('');
   lines.push('---');
   lines.push('');
@@ -418,6 +418,7 @@ Tips: Tab/→ autocomplete · ↑/↓ history`
       const links = document.createElement('div');
       links.className = 'whoami-links';
       [
+        { label: 'Website',  href: config.profile.website },
         { label: 'GitHub',   href: config.profile.github },
         { label: 'LinkedIn', href: config.profile.linkedin },
         { label: '⬇ Resume', href: 'resume.md', download: true },
@@ -464,6 +465,7 @@ Tips: Tab/→ autocomplete · ↑/↓ history`
         ['Shell',    'portfolio-sh 1.0'],
         ['Role',     'Backend Developer'],
         ['Location', p.location],
+        ['Website',  p.website.replace('https://', '')],
         ['GitHub',   p.github.replace('https://', '')],
         ['Email',    p.email],
         ['Skills',   config.profile.skills.slice(0, 5).join(' · ') + ' …'],
@@ -514,6 +516,7 @@ Tips: Tab/→ autocomplete · ↑/↓ history`
 
       const items = [
         { label: 'Email',    value: config.profile.email,    href: 'mailto:' + config.profile.email,    copy: true },
+        { label: 'Website',  value: config.profile.website,  href: config.profile.website,              copy: false },
         { label: 'GitHub',   value: config.profile.github,   href: config.profile.github,               copy: false },
         { label: 'LinkedIn', value: config.profile.linkedin, href: config.profile.linkedin,             copy: false },
       ];
@@ -794,9 +797,10 @@ Tips: Tab/→ autocomplete · ↑/↓ history`
     }
 
     case 'open': {
-      if (!args.length) return { type: 'error', content: 'usage: open <url|github|linkedin>' };
+      if (!args.length) return { type: 'error', content: 'usage: open <url|website|github|linkedin>' };
       let url = args[0];
       if (url === 'github')   url = config.profile.github;
+      if (url === 'website')  url = config.profile.website;
       if (url === 'linkedin') url = config.profile.linkedin;
       if (url === 'blog')     url = config.profile.github + '?tab=repositories';
       if (!url.startsWith('http')) url = 'https://' + url;
