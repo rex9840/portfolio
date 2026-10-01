@@ -11,3 +11,6 @@ public/
 .idea
 .DS_Store
 *.sw?
+
+# Claude Code local config
+.claude/

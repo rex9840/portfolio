@@ -6,6 +6,7 @@ const config = window.PORTFOLIO_DATA;
    ponytail: base64 only stops naive harvesters; a JS-executing scraper still
    gets it. Move to a contact form if spam becomes a real problem. */
 config.profile.email = atob(config.profile.emailEnc);
+if (config.profile.phoneEnc) config.profile.phone = atob(config.profile.phoneEnc);
 document.querySelectorAll('[data-email]').forEach((a) => {
   a.href = 'mailto:' + config.profile.email;
   if (a.hasAttribute('data-email-text')) a.textContent = config.profile.email;
@@ -158,14 +159,22 @@ const ARG_HINTS = {
 };
 
 function generateResumeMD() {
+  // ATS-friendly: standard headings, plain separators, full URLs (parsers drop link text)
   const p = config.profile;
   const lines = [];
+  const bare = url => url.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
+  const period = s => s.replace(/-present$/i, ' - Present').replace(/^(\d{4})-(\d{4})$/, '$1 - $2');
+  const job = e => {
+    lines.push(`### ${e.role} | ${e.company}`);
+    lines.push(period(e.period));
+    lines.push('');
+    e.details.forEach(d => lines.push(`- ${d}`));
+    lines.push('');
+  };
 
   lines.push(`# ${p.name}`);
-  lines.push(`**Backend Developer** · ${p.location}`);
-  lines.push(`${p.email}${p.website ? ` · [Website](${p.website})` : ''} · [GitHub](${p.github}) · [LinkedIn](${p.linkedin})`);
-  lines.push('');
-  lines.push('---');
+  lines.push('Backend Developer');
+  lines.push([p.location, p.phone, p.email, p.website && bare(p.website), bare(p.github), bare(p.linkedin)].filter(Boolean).join(' | '));
   lines.push('');
   lines.push('## Summary');
   lines.push('');
@@ -173,26 +182,35 @@ function generateResumeMD() {
   lines.push('');
   lines.push('## Skills');
   lines.push('');
-  lines.push(p.skills.join(' · '));
+  if (p.skillGroups) Object.entries(p.skillGroups).forEach(([k, v]) => lines.push(`- **${k}:** ${v.join(', ')}`));
+  else lines.push(p.skills.join(', '));
   lines.push('');
   lines.push('## Experience');
   lines.push('');
-  config.experience.forEach(e => {
-    lines.push(`### ${e.role} — ${e.company}`);
-    lines.push(`*${e.period}*`);
-    lines.push('');
-    e.details.forEach(d => lines.push(`- ${d}`));
-    lines.push('');
-  });
+  config.experience.filter(e => !e.community).forEach(job);
   lines.push('## Projects');
   lines.push('');
-  config.projects.forEach(proj => {
-    lines.push(`### ${proj.name} \`[${proj.tech}]\``);
+  config.projects.filter(proj => proj.resume !== false).forEach(proj => {
+    lines.push(`### ${proj.name} | ${proj.tech}`);
     lines.push(proj.description);
-    if (proj.github) lines.push(`[GitHub](${proj.github})`);
-    if (proj.url) lines.push(`[Live](${proj.url})`);
+    lines.push(bare(proj.url || proj.github));
     lines.push('');
   });
+  const community = config.experience.filter(e => e.community);
+  if (community.length) {
+    lines.push('## Community');
+    lines.push('');
+    community.forEach(job);
+  }
+  if (config.education) {
+    lines.push('## Education');
+    lines.push('');
+    config.education.forEach(ed => {
+      lines.push(`### ${ed.degree}${ed.school ? ` | ${ed.school}` : ''}`);
+      lines.push(ed.year);
+      lines.push('');
+    });
+  }
 
   return lines.join('\n');
 }

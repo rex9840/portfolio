@@ -2,70 +2,83 @@
   "profile": {
     "name": "Rupesh Nepal",
     "location": "Kathmandu, Nepal",
+    "phoneEnc": "Kzk3NyA5ODQwNDE2NTMy",
     "emailEnc": "Y29udGFjdC5ydXBlc2gubmVwYWxAZ21haWwuY29t",
     "website": "https://rupeshnepal.com.np",
     "github": "https://github.com/rex9840",
     "linkedin": "https://www.linkedin.com/in/rupesh-nepal-62693920b/",
-    "bio": "Backend developer working across Python, Rust, and Go. Currently at Hyteno Tech maintaining backend systems for Morgenland Teppiche — keeping product data consistent across their webshop and marketplace integrations. Previously built REST APIs and async systems at Shangrila Informatics and Ascend Crest Technologies. GNOME Nepal open source contributor.",
-    "seoDescription": "Backend developer specialising in Python, Rust and Go. Building scalable APIs, async systems, and open-source tools. GNOME Nepal contributor.",
+    "bio": "Backend developer working across Python, Rust, and Go. Currently at Hyteno Tech maintaining backend systems for Morgenland Teppiche's 48,000+ product catalog across their webshop and marketplace integrations. Previously built the backend of a government project management system used in all 77 districts of Nepal (Shangrila Informatics) and a C2C beats marketplace (Ascend Crest Technologies). GNOME Nepal open source contributor.",
+    "seoDescription": "Backend developer specializing in Python, Rust and Go. Building scalable APIs, async systems, and open-source tools. GNOME Nepal contributor.",
     "skills": [
       "Python", "Rust", "Go",
       "Django", "Flask", "FastAPI", "Actix", "Gin",
       "PostgreSQL", "MySQL",
       "Docker", "AWS", "Cloudflare", "CI/CD"
-    ]
+    ],
+    "skillGroups": {
+      "Languages":  ["Python", "Go", "Rust", "SQL"],
+      "Frameworks": ["Django", "Django REST Framework (DRF)", "Flask", "FastAPI", "Gin"],
+      "Data":       ["PostgreSQL", "MySQL", "Redis", "openpyxl", "pandas"],
+      "DevOps":     ["Docker", "AWS (EC2)", "Cloudflare (R2)", "GitHub Actions", "CI/CD", "flake8", "black", "Gunicorn", "Dokploy", "Linux"],
+      "Integrations": ["REST APIs", "WebSockets", "Stripe", "Shopify", "Plentymarkets", "Channable"]
+    }
   },
+  "education": [
+    {
+      "degree": "Bachelor of Science in Computer Science and Information Technology (B.Sc. CSIT)",
+      "school": "Tribhuvan University",
+      "year": "2024"
+    }
+  ],
   "experience": [
     {
       "company": "Hyteno Tech (Client: Morgenland Teppiche)",
       "role": "Backend Developer",
       "period": "2025-present",
-      "highlight": "Unified product data across 4+ marketplaces and leading ERP migration from Plentymarkets to Odoo.",
+      "highlight": "Syncs 11,000+ SKUs across marketplaces and led the ERP migration from Plentymarkets to an in-house Django ERP.",
       "details": [
-        "Built a Shopify → central database sync pipeline, consolidating product and inventory data across eBay, Amazon, ManoMano, and Home24 into a single source of truth.",
-        "Implemented monthly dynamic pricing strategy across webshop channels to optimise sales performance and margins.",
-        "Maintained product data feeds for Google Shopping, Meta Catalog, and Pinterest Ads — ensuring feed accuracy for live ad campaigns and marketplace catalogs.",
-        "Orchestrated multi-marketplace catalog synchronisation using Channable, keeping listings consistent across 4+ sales channels.",
+        "Maintained a catalog of 48,000+ products live on Shopify (35,000+ in active stock), syncing a curated set of 11,000+ SKUs to eBay, Amazon, ManoMano, and Home24 through a Shopify to central database pipeline that serves as the single source of truth.",
+        "Implemented a monthly dynamic pricing strategy across webshop channels, varying discount percentages each month in line with the EU Omnibus Directive 30-day lowest-price rule, driving a 5-8% revenue increase.",
+        "Built automated product feeds for Google Shopping, Meta Catalog, and Pinterest Ads with rule-based dynamic product text, rule-driven custom labels, and channel-specific images for each feed pipeline.",
+        "Localized SKUs into 13 locales for new marketplace launches, and orchestrated catalog synchronization with Channable across 4+ sales channels.",
         "Deployed and managed multiple production applications via Dokploy, reducing deployment overhead and improving operational visibility.",
-        "Leading ERP migration from Plentymarkets to Odoo, ensuring data integrity and continuity across the transition."
+        "Led the ERP migration from Plentymarkets to an in-house ERP built on Django and DRF, migrating audited reports and warehouse data, the core functionality the business depends on."
       ]
     },
     {
       "company": "Shangrila Informatics Pvt. Ltd.",
-      "role": "Backend developer",
-      "period": "2025 (full-time)",
-      "highlight": "Refactored legacy Django codebase and shipped async task pipelines with Celery/Redis.",
+      "role": "Backend Developer",
+      "period": "2024-2025",
+      "highlight": "Backend for a government Project Management System used across all 77 districts of Nepal.",
       "details": [
-        "Developed and maintained scalable REST APIs using Django and Django REST Framework (DRF).",
-        "Refactored legacy Django code to enhance performance and improve code readability.",
-        "Implemented clean architecture and consistent coding standards.",
-        "Implemented data import/export functionalities using pyopenxl and Django Import-Export.",
-        "Utilized pyopenxl to generate Excel reports with advanced patterns.",
-        "Integrated asynchronous background tasks with Celery/Redis.",
-        "Built and managed containerized applications with Docker."
+        "Developed the backend for a government Project Management System (PMS) used by district government offices in all 77 districts of Nepal, with Django and DRF form handling and REST APIs serving concurrent requests from government users.",
+        "Owned the analytics and Excel reporting module, mapping submitted form data into government-standardized Excel reports with predefined header templates and built-in formulas.",
+        "Migrated the legacy Django codebase to Django 4 with a clean, layered architecture, and streamlined the report generation pipeline.",
+        "Built the document validation flow in Celery background workers backed by Redis: a classifier scored each government document on logo and formatting match, auto-accepting documents at 60%+ confidence and routing the rest to manual review."
       ]
     },
     {
       "company": "Ascend Crest Technologies",
-      "role": "Backend/Django developer",
-      "period": "2023-2024 (part-time)",
-      "highlight": "Built BetzBazar — C2C beats marketplace with SOX audio watermarking, Stripe payments, and real-time WebSockets.",
+      "role": "Backend Developer",
+      "period": "2023-2024",
+      "highlight": "Built BeatzBazar, a C2C beats marketplace with SoX audio watermarking, Stripe payments, and real-time WebSockets.",
       "details": [
-        "Built the backend for BetzBazar, a C2C music beats marketplace, using Django and Django REST Framework.",
-        "Implemented SOX-based audio watermarking — overlaying beat samples with an inaudible background sound on preview playback, making raw samples un-pirateable before purchase.",
-        "Integrated Stripe payment gateway for beat licensing transactions, handling one-time purchases and license tier management.",
-        "Added real-time features with Django Channels WebSockets (live notifications, purchase confirmations).",
-        "Set up Celery/Redis async task pipeline for audio processing jobs and background task handling.",
-        "Built CI/CD pipeline with GitHub Actions, deployed on AWS EC2 with Gunicorn/Flower and Cloudflare/R2 for audio file storage."
+        "Built the backend for BeatzBazar, a C2C music beats marketplace, with Django REST Framework (DRF).",
+        "Implemented SoX-based audio watermarking for uncompressed WAV beats, overlaying a watermark beat every 10 seconds on preview copies so only licensed buyers receive the original file after purchase, protecting beats from piracy.",
+        "Integrated Stripe Checkout and webhooks for beat licensing, handling one-time purchases and license tiers, with a unique order ID sent as the idempotency key on every transaction to prevent duplicate charges.",
+        "Built real-time notifications and buyer-seller chat with Django Channels over WebSockets.",
+        "Ran all asynchronous background work, including audio processing, on Celery and Redis, with Celery Beat scheduling the analytics jobs.",
+        "Built a GitHub Actions CI/CD pipeline with flake8 linting and black formatting checks before deployment."
       ]
     },
     {
       "company": "GNOME Nepal",
+      "community": true,
       "role": "Open Source Contributor",
       "period": "2023-present",
       "highlight": "Maintainer of GNOME Nepal's Django backend and contributor to Djate, a production-ready Django template.",
       "details": [
-        "Major Contributor and Maintainer of the GNOME Nepal Backend System (Django).",
+        "Core contributor and maintainer of the GNOME Nepal backend system (Django).",
         "Contributed to 'Djate', a production-ready Django project template used by the community.",
         "Collaborated with open source contributors across Nepal to build and maintain community infrastructure.",
         "Reviewed pull requests, triaged issues, and mentored new contributors to the Django ecosystem.",
@@ -74,71 +87,74 @@
     },
     {
       "company": "Ubuntu Nepal",
+      "community": true,
       "role": "Operations Lead",
-      "period": "2025-present",
-      "highlight": "Operations Lead for UbuCon Asia 2025 — ran event operations and social media.",
+      "period": "2025",
+      "highlight": "Operations Lead for UbuCon Asia 2025. Ran event operations and social media.",
       "details": [
-        "Operations Lead for UbuCon Asia 2025, hosted by Ubuntu Nepal.",
-        "Ran on-ground event operations across the multi-day conference.",
-        "Ran the event's social media campaign throughout UbuCon Asia 2025."
+        "Led operations for UbuCon Asia 2025, hosted by Ubuntu Nepal.",
+        "Managed on-ground event operations across the multi-day conference.",
+        "Ran the event's social media campaign."
       ]
     }
   ],
   "projects": [
     {
+      "name": "Ghar Bhada",
+      "tech": "Python",
+      "description": "Rental aggregator for Nepal. Consolidates listings from 20+ sites and direct owner submissions onto one searchable map, with saved-search alerts and below-market price flags.",
+      "url": "https://ghar-bhada.com"
+    },
+    {
+      "name": "Excel Product Import",
+      "tech": "Django, DRF, Celery, Redis, openpyxl, pandas",
+      "description": "Imports 10,000+ row Excel product files by splitting each upload into 100-row chunks processed in parallel by Celery workers with automatic retries. Validates every cell, logs null values and empty rows with per-import timing, normalizes 8 product attributes (brand, color, material, and more) into related tables, and serves import, export, and analytics through a Swagger-documented DRF API.",
+      "github": "https://github.com/rex9840/excel-product-data"
+    },
+    {
       "name": "Git Commit Visualizer",
       "tech": "Go, CLI",
-      "description": "CLI tool to visualize git contributions similar to GitHub/GitLab contribution graphs.",
+      "description": "CLI tool that renders local git commit history as a contribution graph, similar to GitHub and GitLab.",
       "github": "https://github.com/rex9840/git-loca-visualizer"
     },
     {
       "name": "URL Shortener",
-      "tech": "Go, Gin",
-      "description": "URL shortener service demonstrating modular Go structure and database communication.",
+      "tech": "Go, Gin, Redis",
+      "description": "URL shortening service in Go with a Gin HTTP API, Redis-backed storage, and unit tests for the short-code generator and store layer.",
       "github": "https://github.com/rex9840/GoUrlShortner"
     },
     {
-      "name": "Library Management System",
-      "tech": "Django, DRF",
-      "description": "REST API replication of a library management system.",
-      "github": "https://github.com/rex9840/LibraryManagementSystem"
-    },
-    {
       "name": "LearnRust",
+      "resume": false,
       "tech": "Rust",
-      "description": "Notes and worked examples covering Rust fundamentals — ownership, borrowing, traits, and error handling.",
+      "description": "Notes and worked examples covering Rust fundamentals: ownership, borrowing, traits, and error handling.",
       "github": "https://github.com/rex9840/LearnRust"
     },
     {
       "name": "Tabular to JSON Converter",
-      "tech": "Rust",
-      "description": "Web scraping tool to convert tabular data to structured JSON.",
+      "tech": "Rust, reqwest, scraper, serde",
+      "description": "Rust web scraper that fetches a page, extracts its first HTML table, and writes the rows out as structured JSON.",
       "github": "https://github.com/rex9840/TabularToJsonUsingRust_WebScraping"
     },
     {
-      "name": "Rust Web App",
-      "tech": "Rust, Actix",
-      "description": "Web application leveraging Rust's adaptability.",
+      "name": "Rust Todo REST API",
+      "resume": false,
+      "tech": "Rust, Actix Web",
+      "description": "CRUD REST API for todos built with Actix Web, using thread-safe shared state (Arc<Mutex>) as an in-memory store.",
       "github": "https://github.com/rex9840/webApp-using-Actix"
     },
     {
       "name": "Recursive CFG Parser",
       "tech": "Rust",
-      "description": "Compiler logic to parse context-free grammars.",
+      "description": "Recursive descent parser in Rust for a context-free grammar, with left factoring applied to remove non-determinism.",
       "github": "https://github.com/rex9840/RecursiveParserForCFG"
-    },
-    {
-      "name": "Ghar Bhada",
-      "tech": "Python, TypeScript",
-      "description": "Rental aggregator for Nepal — consolidates listings from 20+ sites and direct owner submissions onto one searchable map, with saved-search alerts and below-market price flags.",
-      "url": "https://ghar-bhada.com"
     }
   ],
   "customFiles": {
     "contribution.txt": "Always open for collaborations! Run the `email` command to get in touch."
   },
   "now": {
-    "building":     "ERP migration from Plentymarkets to Odoo at Hyteno Tech",
+    "building":     "In-house Django ERP at Hyteno Tech",
     "learning":     "Rust async programming (Tokio)",
     "contributing": "GNOME Nepal backend maintenance",
     "reading":      "The Pragmatic Programmer",
