@@ -158,63 +158,6 @@ const ARG_HINTS = {
   echo:     '<text>',
 };
 
-function generateResumeMD() {
-  // ATS-friendly: standard headings, plain separators, full URLs (parsers drop link text)
-  const p = config.profile;
-  const lines = [];
-  const bare = url => url.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
-  const period = s => s.replace(/-present$/i, ' - Present').replace(/^(\d{4})-(\d{4})$/, '$1 - $2');
-  const job = e => {
-    lines.push(`### ${e.role} | ${e.company}`);
-    lines.push(period(e.period));
-    lines.push('');
-    e.details.forEach(d => lines.push(`- ${d}`));
-    lines.push('');
-  };
-
-  lines.push(`# ${p.name}`);
-  lines.push('Backend Developer');
-  lines.push([p.location, p.phone, p.email, p.website && bare(p.website), bare(p.github), bare(p.linkedin)].filter(Boolean).join(' | '));
-  lines.push('');
-  lines.push('## Summary');
-  lines.push('');
-  lines.push(p.bio);
-  lines.push('');
-  lines.push('## Skills');
-  lines.push('');
-  if (p.skillGroups) Object.entries(p.skillGroups).forEach(([k, v]) => lines.push(`- **${k}:** ${v.join(', ')}`));
-  else lines.push(p.skills.join(', '));
-  lines.push('');
-  lines.push('## Experience');
-  lines.push('');
-  config.experience.filter(e => !e.community).forEach(job);
-  lines.push('## Projects');
-  lines.push('');
-  config.projects.filter(proj => proj.resume !== false).forEach(proj => {
-    lines.push(`### ${proj.name} | ${proj.tech}`);
-    lines.push(proj.description);
-    lines.push(bare(proj.url || proj.github));
-    lines.push('');
-  });
-  const community = config.experience.filter(e => e.community);
-  if (community.length) {
-    lines.push('## Community');
-    lines.push('');
-    community.forEach(job);
-  }
-  if (config.education) {
-    lines.push('## Education');
-    lines.push('');
-    config.education.forEach(ed => {
-      lines.push(`### ${ed.degree}${ed.school ? ` | ${ed.school}` : ''}`);
-      lines.push(ed.year);
-      lines.push('');
-    });
-  }
-
-  return lines.join('\n');
-}
-
 function levenshtein(a, b) {
   const m = a.length, n = b.length;
   const dp = Array.from({length: m + 1}, (_, i) =>
@@ -394,7 +337,7 @@ function processCommand(cmd, currentPath) {
   contact        Contact info (clickable + copy)
   now            What I'm currently working on
   blog           Writing & articles
-  resume         Download resume as Markdown
+  resume         Open printable resume (PDF)
   ls / cd / cat  Navigate the filesystem
   nvim <file>    Open file  (i insert · Esc normal · / search · :wq save+quit)
   grep <pat> <f> Search pattern in file
@@ -439,14 +382,13 @@ Tips: Tab/→ autocomplete · ↑/↓ history`
         { label: 'Website',  href: config.profile.website },
         { label: 'GitHub',   href: config.profile.github },
         { label: 'LinkedIn', href: config.profile.linkedin },
-        { label: '⬇ Resume', href: 'resume.md', download: true },
-      ].forEach(({ label, href, download }) => {
+        { label: 'Resume', href: 'resume.html' },
+      ].forEach(({ label, href }) => {
         const a = document.createElement('a');
         a.href = href;
-        if (download) { a.download = config.profile.name.replace(/\s+/g,'_') + '_Resume.md'; }
-        else { a.target = '_blank'; a.rel = 'noopener noreferrer'; }
+        a.target = '_blank'; a.rel = 'noopener noreferrer';
         a.className = 'whoami-link';
-        a.textContent = (download ? '' : '↗ ') + label;
+        a.textContent = '↗ ' + label;
         links.appendChild(a);
       });
 
@@ -826,65 +768,9 @@ Tips: Tab/→ autocomplete · ↑/↓ history`
       return { type: 'text', content: `Opening ${url} ...` };
     }
 
-    case 'resume': {
-      const md = generateResumeMD();
-      const wrap = document.createElement('div');
-      wrap.className = 'resume-wrap';
-
-      // Progress bar
-      const progress = document.createElement('div');
-      progress.className = 'resume-progress';
-      const bar = document.createElement('div');
-      bar.className = 'resume-bar';
-      const label = document.createElement('span');
-      label.className = 'resume-label';
-      label.textContent = 'Ready';
-      progress.appendChild(bar);
-      progress.appendChild(label);
-
-      // Download via Blob URL — no static file dependency, always reflects portfolio.json
-      const filename = config.profile.name.replace(/\s+/g, '_') + '_Resume.md';
-      const blob = new Blob([md], { type: 'text/markdown' });
-      const blobUrl = URL.createObjectURL(blob);
-      const btn = document.createElement('a');
-      btn.className = 'resume-dl-btn';
-      btn.href = blobUrl;
-      btn.download = filename;
-      btn.textContent = '⬇  download resume.md';
-
-      btn.addEventListener('click', () => {
-        setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
-        const steps = [
-          [20,  'Collecting profile…'],
-          [45,  'Writing experience…'],
-          [65,  'Adding projects…'],
-          [85,  'Formatting…'],
-          [100, 'Done ✓'],
-        ];
-        let i = 0;
-        function runStep() {
-          if (i >= steps.length) {
-            setTimeout(() => { bar.style.width = '0%'; label.textContent = 'Ready'; }, 1800);
-            return;
-          }
-          bar.style.width = steps[i][0] + '%';
-          label.textContent = steps[i][1];
-          i++;
-          setTimeout(runStep, 160);
-        }
-        runStep();
-      });
-
-      // Inline preview (first 22 lines)
-      const preview = document.createElement('pre');
-      preview.className = 'resume-preview';
-      preview.textContent = md.split('\n').slice(0, 22).join('\n') + '\n…';
-
-      wrap.appendChild(progress);
-      wrap.appendChild(btn);
-      wrap.appendChild(preview);
-      return { type: 'node', node: wrap };
-    }
+    case 'resume':
+      window.open('resume.html', '_blank', 'noopener');
+      return { type: 'text', content: 'Opening resume.html ... (use "Save as PDF" there)' };
 
     case 'echo':
       return { type: 'text', content: args.join(' ') };

@@ -636,62 +636,6 @@ body.resizing { cursor: col-resize; user-select: none; }
 }
 .copy-btn:hover { color: var(--green); border-color: var(--green); }
 
-/* ── Resume ── */
-.resume-wrap { display: flex; flex-direction: column; gap: 12px; }
-
-.resume-progress {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-family: monospace;
-  font-size: 11px;
-}
-.resume-bar {
-  height: 4px;
-  width: 0%;
-  background: var(--green);
-  border-radius: 2px;
-  transition: width 0.12s ease;
-  flex-shrink: 0;
-  max-width: 160px;
-  min-width: 0;
-}
-.resume-progress:has(.resume-bar[style*="width: 0"]) .resume-bar { display: none; }
-.resume-label {
-  color: var(--gray-5);
-  font-size: 11px;
-  white-space: nowrap;
-}
-
-.resume-dl-btn {
-  display: inline-block;
-  align-self: flex-start;
-  background: var(--green);
-  color: var(--bg);
-  border: none;
-  font-family: monospace;
-  font-size: 13px;
-  font-weight: bold;
-  padding: 8px 18px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: opacity 0.15s;
-  letter-spacing: 0.03em;
-  text-decoration: none;
-}
-.resume-dl-btn:hover { opacity: 0.85; }
-
-.resume-preview {
-  font-family: monospace;
-  font-size: 11px;
-  color: var(--gray-4);
-  white-space: pre-wrap;
-  border-left: 2px solid var(--gray-7);
-  padding-left: 12px;
-  margin: 0;
-  line-height: 1.6;
-}
-
 /* ── Project links ── */
 .project-link { margin-top: 3px; }
 .project-link a {

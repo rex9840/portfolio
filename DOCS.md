@@ -18,7 +18,7 @@ portfolio/
 ├── layouts/
 │   ├── index.html            ← Main HTML shell; Hugo injects PORTFOLIO_DATA
 │   ├── 404.html              ← Terminal-themed 404 with ASCII art (Hugo template)
-│   └── index.resume.md       ← Hugo template that generates /resume.md at build time
+│   └── index.resume.html     ← Hugo template that generates /resume.html (print to PDF)
 ├── static/
 │   ├── css/style.css         ← All styles (vars, layout, components, standard view)
 │   ├── js/terminal.js        ← All JS (~2200 lines, vanilla)
@@ -135,7 +135,7 @@ const collapsedDirs  // Set of path keys; persisted to localStorage
 | `contact` | Clickable contact info with copy button |
 | `now` | What I'm currently building/learning/reading |
 | `blog` | ASCII art under-construction page with queued topics |
-| `resume` | Blob URL download of generated resume.md |
+| `resume` | Opens /resume.html (one-page, print to PDF) |
 | `ls [path]` | List directory (clickable items) |
 | `cd [path]` | Change directory |
 | `cat <file>` | Read file; emails/URLs auto-linkified |

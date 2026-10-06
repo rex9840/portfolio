@@ -5,15 +5,11 @@ disableKinds = ["taxonomy", "term"]
 enableRobotsTXT = true
 disableHugoGeneratorInject = true
 
-[mediaTypes]
-  [mediaTypes."text/markdown"]
-    suffixes = ["md"]
-
 [outputFormats]
   [outputFormats.Resume]
-    mediaType  = "text/markdown"
+    mediaType  = "text/html"
     baseName   = "resume"
-    isPlainText = true
+    isHTML     = true
     notAlternative = true
 
 [outputs]
