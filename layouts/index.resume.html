@@ -39,6 +39,7 @@
 <h2>Experience</h2>
 {{ range $i, $e := where $d.experience "community" "!=" true }}{{ with $e }}
 <h3>{{ .role }}, {{ .company }}<span>{{ replace .period "-" " - " }}</span></h3>
+{{ with .client }}<p><em>Client: {{ . }}</em></p>{{ end }}
 <ul>{{ range first (cond (eq $i 0) 7 3) .details }}<li>{{ . }}</li>{{ end }}</ul>
 {{ end }}{{ end }}
 
