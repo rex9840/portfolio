@@ -7,8 +7,8 @@
     "website": "https://rupeshnepal.com.np",
     "github": "https://github.com/rex9840",
     "linkedin": "https://www.linkedin.com/in/rupesh-nepal-62693920b/",
-    "bio": "Backend developer working across Python, Rust, and Go. Currently at Hyteno Tech maintaining backend systems for a European home furnishings retailer's 40,000+ product catalog across its webshop and marketplace integrations. Previously built the backend of a government project management system rolled out to municipalities across Nepal (Shangrila Informatics) and a C2C beats marketplace (Ascend Crest Technologies). GNOME Nepal open source contributor.",
-    "summary": "Backend developer with 3 years building production Django and DRF systems. Own data consistency across the database, Shopify webshops, and marketplaces for a 40,000+ product catalog; previously built a government project tracking platform for municipalities across Nepal. Strong in Celery, Redis, API integrations, and migrations.",
+    "bio": "Backend developer working across Python, Rust, and Go. Currently at Hyteno Tech maintaining backend systems for Morgenland Teppiche's 48,000+ product catalog across their webshop and marketplace integrations. Previously built the backend of a government project management system rolled out to municipalities across Nepal (Shangrila Informatics) and a C2C beats marketplace (Ascend Crest Technologies). GNOME Nepal open source contributor.",
+    "summary": "Backend developer with 3 years building production Django and DRF systems. Own data consistency across the database, Shopify webshops, and marketplaces for a 48,000+ product catalog; previously built a government project tracking platform for municipalities across Nepal. Strong in Celery, Redis, API integrations, and migrations.",
     "seoDescription": "Backend developer specializing in Python, Rust and Go. Building scalable APIs, async systems, and open-source tools. GNOME Nepal contributor.",
     "skills": [
       "Python",
@@ -53,16 +53,16 @@
   "experience": [
     {
       "company": "Hyteno Tech Pvt. Ltd.",
-      "client": "European e-commerce retailer (home furnishings)",
+      "client": "Morgenland Teppiche",
       "role": "Mid-Level Backend Developer",
       "period": "2025-present",
-      "highlight": "Syncs 10,000+ SKUs across marketplaces and led the ERP migration from a legacy SaaS e-commerce platform to an in-house Django ERP.",
+      "highlight": "Syncs 11,000+ SKUs across marketplaces and led the ERP migration from a legacy SaaS e-commerce platform to an in-house Django ERP.",
       "details": [
-        "Built a daily self-healing sync of 40,000+ Shopify products into a central database, using bulk exports with a fallback to resumable multithreaded requests that checkpoint pagination cursors through rate limits.",
-        "Migrating marketplace sync for 10,000+ SKUs across major EU marketplaces from a third-party feed tool to direct API integrations in the in-house ERP.",
+        "Built a daily self-healing sync of 48,000+ Shopify products into a central database, using bulk exports with a fallback to resumable multithreaded requests that checkpoint pagination cursors through rate limits.",
+        "Migrating marketplace sync for 11,000+ SKUs across major EU marketplaces from a third-party feed tool to direct API integrations in the in-house ERP.",
         "Led the migration from a legacy SaaS e-commerce platform to an in-house Django and DRF ERP, moving all financial and warehouse data and eliminating recurring licensing costs.",
-        "Contributed to rebuilding product translation uploads for 10+ locales on Shopify's GraphQL API, matching translations by Shopify's content digests instead of 15 MB file imports, cutting a new-domain rollout from 2 days to 9 hours.",
-        "Helped replace a capped third-party bulk import tool with an in-house Shopify GraphQL pipeline that creates and updates products from a fixed-template file, 30-40% faster with no update cap.",
+        "Contributed to rebuilding product translation uploads for 13 locales on Shopify's GraphQL API, matching translations by Shopify's content digests instead of 15 MB file imports, cutting a new-domain rollout from 2 days to 9 hours.",
+        "Helped replace a third-party bulk import tool capped at 5,000 product updates with an in-house Shopify GraphQL pipeline that creates and updates products from a fixed-template file, 30-40% faster with no update cap.",
         "Built monthly dynamic pricing compliant with the EU Omnibus Directive 30-day lowest-price rule.",
         "Automated Google Shopping, Meta Catalog, and Pinterest Ads feeds through Google Sheets (OAuth, direct cell updates) and S3 (background processing), with rule-based product text, labels, and per-channel images.",
         "Deployed and managed multiple production applications via Dokploy, reducing deployment overhead and improving operational visibility."
